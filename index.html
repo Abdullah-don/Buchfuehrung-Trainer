@@ -1,0 +1,717 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Buchführung Klausurtrainer Thema 1–9 Layout v11</title>
+<style>
+:root {
+  --bg:#0f172a; --card:#111827; --card2:#1f2937; --text:#e5e7eb; --muted:#9ca3af;
+  --accent:#38bdf8; --good:#22c55e; --bad:#ef4444; --warn:#f59e0b; --border:#334155;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(135deg,#0f172a,#172554 55%,#111827);color:var(--text);min-height:100vh}
+header{padding:24px 16px;text-align:center}
+h1{margin:0;font-size:clamp(26px,4vw,46px)}
+.subtitle{color:var(--muted);margin-top:8px}
+.app{max-width:1100px;margin:0 auto;padding:0 14px 40px}
+.card{background:rgba(17,24,39,.92);border:1px solid var(--border);border-radius:22px;box-shadow:0 20px 60px rgba(0,0,0,.25);padding:18px;margin:14px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+button,.btn{border:0;border-radius:14px;padding:12px 14px;background:var(--accent);color:#04111d;font-weight:800;cursor:pointer;transition:.15s;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+button:hover{transform:translateY(-1px);filter:brightness(1.05)}
+button.secondary{background:#334155;color:var(--text)}
+button.good{background:var(--good);color:white}
+button.bad{background:var(--bad);color:white}
+button.warn{background:var(--warn);color:#111827}
+button.ghost{background:transparent;color:var(--text);border:1px solid var(--border)}
+button:disabled{opacity:.5;cursor:not-allowed}
+select,input[type="number"],input[type="text"]{width:100%;padding:12px;border-radius:12px;border:1px solid var(--border);background:#0b1220;color:var(--text)}
+.option{display:flex;gap:10px;align-items:flex-start;padding:12px;border:1px solid var(--border);border-radius:14px;margin:9px 0;background:#0b1220;cursor:pointer}
+.option:hover{border-color:var(--accent)}
+.option input{margin-top:4px;transform:scale(1.15)}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.badge{padding:6px 10px;border-radius:999px;background:#0b1220;border:1px solid var(--border);color:var(--muted);font-size:13px}
+.progressWrap{height:12px;background:#0b1220;border-radius:999px;overflow:hidden;border:1px solid var(--border)}
+.progress{height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--good));transition:.25s}
+.feedback{padding:14px;border-radius:14px;margin-top:12px;border:1px solid var(--border);display:none}
+.feedback.goodf{background:rgba(34,197,94,.12);border-color:rgba(34,197,94,.45)}
+.feedback.badf{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.45)}
+.feedback.infof{background:rgba(56,189,248,.12);border-color:rgba(56,189,248,.45)}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.hidden{display:none!important}
+.small{font-size:13px;color:var(--muted)}
+.questionText{font-size:20px;line-height:1.45;margin:8px 0 14px}
+.matchRow{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:center;margin:10px 0}
+.matchLeft{padding:12px;background:#0b1220;border:1px solid var(--border);border-radius:12px}
+.orderItem{display:flex;align-items:center;gap:10px;margin:8px 0;padding:10px;background:#0b1220;border:1px solid var(--border);border-radius:12px}
+.orderItem button{padding:7px 10px;border-radius:10px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+.stat{background:#0b1220;border:1px solid var(--border);border-radius:16px;padding:14px;text-align:center}
+.stat b{font-size:28px;display:block}
+.sheetgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}
+.sheetgrid section{background:#0b1220;border:1px solid var(--border);border-radius:16px;padding:14px}
+.table{width:100%;border-collapse:collapse;margin-top:10px}
+.table th,.table td{border-bottom:1px solid var(--border);padding:10px;text-align:left;vertical-align:top}
+.favorite{font-size:22px;background:transparent;color:#facc15;border:1px solid var(--border);padding:8px 12px}
+@media(max-width:620px){
+  .card{border-radius:16px;padding:14px}
+  .matchRow{grid-template-columns:1fr}
+  .row button{flex:1 1 auto}
+}
+
+.embeddedNav{
+  margin-top:14px;
+  border-top:1px solid var(--border);
+  padding-top:12px;
+}
+.navButtons{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  justify-content:center;
+}
+.embeddedNav button{
+  flex:1;
+  min-width:0;
+  padding:9px 6px;
+  border-radius:13px;
+  font-size:15px;
+}
+.embeddedNav .navIcon{font-size:17px}
+.navMiniStats{
+  margin-top:7px;
+  text-align:center;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.35;
+}
+details.explainBox{margin-top:12px}
+details.explainBox summary{cursor:pointer;font-weight:800;padding:10px;border-radius:12px;background:#0b1220;border:1px solid var(--border)}
+details.explainBox div{padding:12px}
+@media(max-width:620px){
+  body{padding-bottom:110px}
+  .embeddedNav{
+  margin-top:14px;
+  border-top:1px solid var(--border);
+  padding-top:12px;
+}
+.navButtons{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  justify-content:center;
+}
+.embeddedNav button{
+  flex:1;
+  min-width:0;
+  padding:9px 6px;
+  border-radius:13px;
+  font-size:15px;
+}
+.embeddedNav .navIcon{font-size:17px}
+.navMiniStats{
+  margin-top:7px;
+  text-align:center;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.35;
+}
+}
+
+
+.quizShell{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:14px;
+}
+.questionPanel{
+  background:#0b1220;
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:16px;
+}
+.answerPanel{
+  margin-top:12px;
+}
+.feedbackPanel{
+  background:rgba(17,24,39,.88);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:14px;
+  margin-top:14px;
+}
+.compactFeedback{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.compactFeedback b{
+  font-size:18px;
+}
+details.explainBox:not([open]){
+  margin-top:10px;
+}
+details.explainBox[open]{
+  margin-top:10px;
+}
+#feedback, #correctionCard, #hintBox, #solutionBox{
+  max-width:100%;
+}
+.questionText{
+  background:transparent;
+  border:0;
+  padding:0;
+}
+
+</style>
+</head>
+<body>
+<header>
+  <h1>📘 Buchführung Klausurtrainer</h1>
+  <div class="subtitle">Thema 1–9 · interaktiv · klausurähnlich · mit Tipps, Lösungen und Statistik</div>
+</header>
+
+<div class="app">
+  <section id="setup" class="card">
+    <h2>Start</h2>
+    <div class="grid">
+      <label>Modus
+        <select id="mode">
+          <option value="training">Trainingsmodus</option>
+          <option value="exam">Klausurmodus</option>
+          <option value="weak">Schwächenmodus</option>
+          <option value="favorites">Favoritenmodus</option>
+          <option value="cheat">Formelsammlung / Spickzettel</option>
+        </select>
+      </label>
+      <label>Thema
+        <select id="topic">
+          <option value="all">Alle Themen</option>
+        </select>
+      </label>
+      <label>Anzahl Fragen
+        <select id="count">
+          <option value="10">10 Fragen</option>
+          <option value="20" selected>20 Fragen</option>
+          <option value="999">Alle Fragen</option>
+        </select>
+      </label>
+    </div>
+    <div class="row" style="margin-top:16px">
+      <button onclick="startQuiz()">▶ Starten</button>
+      <button class="bad" onclick="startWrongBank()">❌ Falsche Fragen üben <span id="wrongBankCount"></span></button><button class="warn" onclick="startSkippedBank()">⏭️ Übersprungene Fragen</button><button class="secondary" onclick="startFavorites()">⭐ Favoriten üben</button>
+      <button class="secondary" onclick="showCheat()">📄 Spickzettel anzeigen</button>
+      <button class="ghost" onclick="resetAll()">🗑️ Lernstand zurücksetzen</button>
+    </div>
+  
+<div class="card" style="margin-top:16px">
+<h3>📊 Lernfortschritt</h3>
+<div class="stats">
+<div class="stat"><b id="dashWrong">0</b>Falsche Fragen</div>
+<div class="stat"><b id="dashSkip">0</b>Übersprungene</div>
+<div class="stat"><b id="dashFav">0</b>Favoriten</div>
+</div>
+<div id="themeProgress" style="margin-top:12px"></div>
+</div>
+  </section>
+
+  <section id="cheatCard" class="card hidden">
+<h2>Spickzettel / Formelsammlung</h2>
+<div class="sheetgrid">
+<section><h3>Thema 1</h3><p><b>Externes Rechnungswesen:</b> Dokumentation, Rechenschaft/Information, Disposition, Kontrolle, Reinvermögens- und Gewinnermittlung.</p><p><b>HGB:</b> 5 Bücher: Handelsstand, Handelsgesellschaften und stille Gesellschaft, Handelsbücher, Handelsgeschäfte, Seehandel.</p><p><b>Grundbuch:</b> chronologisch · <b>Hauptbuch:</b> sachlich · <b>Nebenbuch:</b> detailliert.</p></section>
+<section><h3>Thema 2</h3><p><b>Gewinn:</b> EK Ende − EK Anfang + Entnahmen − Einlagen.</p><p><b>Vorverlegte Inventur:</b> Wertfortschreibung: Bestand Inventurtag + Zugänge − Abgänge.</p><p><b>Stichprobe:</b> mathematisch-statistische Modelle, GoB, Aussageäquivalenz.</p></section>
+<section><h3>Thema 3</h3><p><b>Aktiva:</b> Mittelverwendung, Vermögensgegenstände.</p><p><b>Passiva:</b> Mittelherkunft, Eigenkapital, Schulden.</p><p><b>Bilanzgleichung:</b> Aktiva = Passiva = Vermögen = Eigenkapital + Fremdkapital.</p><p><b>Inventar:</b> Menge + Wert. <b>Bilanz:</b> nur Wert.</p></section>
+<section><h3>Thema 4</h3><p><b>Aktivkonto:</b> Mehrung Soll, Minderung Haben.</p><p><b>Passivkonto:</b> Mehrung Haben, Minderung Soll.</p><p><b>Kauf auf Ziel:</b> Aktiv-Passiv-Mehrung. <b>Kunde zahlt Forderung:</b> Aktivtausch.</p></section>
+<section><h3>Thema 5</h3><p><b>Rabatt:</b> sofort beim Kauf/Verkauf.</p><p><b>Skonto:</b> erst bei Zahlung.</p><p><b>Reihenfolge:</b> Listenpreis − Rabatt + Bezugskosten + USt.</p><p><b>Brutto zu Netto:</b> Brutto / 1,19.</p></section>
+<section><h3>Thema 6</h3><p><b>Bestandsveränderung:</b> EB − AB.</p><p><b>Bestandsmehrung:</b> EB > AB → Produktion = Absatz + Mehrung.</p><p><b>Bestandsminderung:</b> EB < AB → Produktion = Absatz − Minderung.</p><p><b>Endbestand Stück:</b> Wert / Herstellkosten je Stück.</p></section>
+</div>
+<div class="row"><button onclick="backHome()" class="secondary">Zurück</button></div></section>
+
+  <section id="quiz" class="card hidden">
+    <div class="row" style="justify-content:space-between;align-items:center">
+      <div>
+        <div class="meta">
+          <span class="badge" id="qTopic"></span>
+          <span class="badge" id="qType"></span>
+          <span class="badge" id="qDiff"></span>
+          <span class="badge" id="qNum"></span>
+        </div>
+      </div>
+      <button class="favorite" onclick="toggleFav()" id="favBtn">☆</button>
+    </div>
+    <div class="progressWrap"><div id="progress" class="progress"></div></div>
+    <div class="quizShell">
+      <div class="questionPanel">
+        <div id="question" class="questionText"></div>
+        <div id="answerArea" class="answerPanel"></div>
+        <div class="row" style="margin-top:14px">
+          <button class="warn" onclick="showHint()">💡 Tipp</button>
+          <button class="secondary" onclick="toggleSolution()">👁️ Lösung anzeigen/ausblenden</button>
+        </div>
+        <div class="embeddedNav" id="embeddedNav">
+          <div class="navButtons">
+            <button class="secondary" onclick="prevQuestion()" id="prevBtn" title="Vorherige Frage"><span class="navIcon">⬅️</span> <span class="hideMobile">Zurück</span></button>
+            <button onclick="checkAnswer()" id="checkBtn" title="Antwort prüfen"><span class="navIcon">✅</span> <span class="hideMobile">Prüfen</span></button>
+            <button class="secondary" onclick="nextQuestion()" id="nextBtn" title="Nächste Frage"><span class="navIcon">➡️</span> <span class="hideMobile">Weiter</span></button>
+            <button class="warn" onclick="skipQuestion()" id="skipBtn" title="Überspringen"><span class="navIcon">⏭️</span> <span class="hideMobile">Skip</span></button>
+            <button class="bad" onclick="backHome()" id="homeBtn" title="Home"><span class="navIcon">🏠</span> <span class="hideMobile">Home</span></button>
+          </div>
+          <div class="navMiniStats" id="navMiniStats">Frage 1 / 1</div>
+        </div>
+      </div>
+
+      <div id="hintBox" class="feedback infof"></div>
+      <div id="solutionBox" class="feedback infof"></div>
+      <div id="feedback" class="feedback feedbackPanel"></div>
+      <div id="correctionCard" class="feedback infof feedbackPanel" style="display:none"></div>
+    </div>
+  </section>
+
+
+
+  <section id="result" class="card hidden">
+    <h2>Ergebnis</h2>
+    <div class="stats">
+      <div class="stat"><b id="scoreVal">0</b>Punkte</div>
+      <div class="stat"><b id="percentVal">0%</b>Prozent</div>
+      <div class="stat"><b id="rightVal">0</b>Richtig</div>
+      <div class="stat"><b id="wrongVal">0</b>Falsch</div>
+      <div class="stat"><b id="skipVal">0</b>Übersprungen</div>
+    </div>
+    <div class="row" style="margin-top:16px">
+      <button onclick="repeatWrong()">Falsche wiederholen</button>
+      <button onclick="repeatSkipped()" class="warn">Übersprungene wiederholen</button>
+      <button onclick="backHome()" class="secondary">Neu starten</button>
+    </div>
+    <h3>Fehlerliste und Erklärungen</h3>
+    <div id="mistakes"></div>
+  </section>
+</div>
+
+<script>
+const QUESTIONS = [{"id": "t1_001", "topic": "1. Betriebliches Rechnungswesen", "type": "multi", "difficulty": "leicht", "prompt": "Welche Aufgaben gehören zum externen Rechnungswesen?", "options": ["Rechenschafts- und Informationsfunktion", "Bereicherungs- und Interessensfunktion", "Dokumentationsfunktion", "Dispositionsfunktion", "Reinvermögens- und Gewinnermittlungsfunktion", "Diversifikationsfunktion"], "answer": [0, 2, 3, 4], "explanation": "Richtig sind Rechenschaft/Information, Dokumentation, Disposition sowie Reinvermögens- und Gewinnermittlung. Bereicherung und Diversifikation sind Ablenker.", "hint": "Es geht um Nachweis, Information und Erfolgsermittlung."}, {"id": "t1_002", "topic": "1. Betriebliches Rechnungswesen", "type": "single", "difficulty": "leicht", "prompt": "Die Buchführung ist eine ...", "options": ["Punktrechnung", "Zeitabschnittsrechnung", "Kostenstellenrechnung", "Investitionsrechnung"], "answer": 1, "explanation": "Buchführung ist eine Zeitabschnittsrechnung, weil sie Geschäftsvorfälle eines Zeitraums erfasst.", "hint": "Es wird ein Zeitraum, z. B. ein Geschäftsjahr, betrachtet."}, {"id": "t1_003", "topic": "1. Betriebliches Rechnungswesen", "type": "fill", "difficulty": "leicht", "prompt": "Ergänze: Die Buchführung dient der vollständigen und ordnungsgemäßen Dokumentation aller ________.", "answers": ["Geschäftsvorfälle", "Geschaeftsvorfaelle"], "explanation": "Buchführung dokumentiert alle Geschäftsvorfälle vollständig und ordnungsgemäß.", "hint": "Was wird im Unternehmen gebucht?"}, {"id": "t1_004", "topic": "1. Betriebliches Rechnungswesen", "type": "match", "difficulty": "leicht", "prompt": "Ordne die Bücher der Buchführung zu.", "pairs": [["Grundbuch / Journal", "chronologische Aufzeichnung"], ["Hauptbuch", "sachliche Aufzeichnung"], ["Nebenbuch", "tiefere Gliederung bestimmter Konten"]], "explanation": "Grundbuch = zeitlich, Hauptbuch = sachlich nach Konten, Nebenbuch = detaillierte Nebenrechnung.", "hint": "Grundbuch = Reihenfolge nach Datum."}, {"id": "t1_005", "topic": "1. Betriebliches Rechnungswesen", "type": "single", "difficulty": "leicht", "prompt": "In wie viele Bücher ist das HGB gegliedert?", "options": ["3", "4", "5", "6"], "answer": 2, "explanation": "Das HGB besteht aus 5 Büchern.", "hint": "Die Zahl liegt zwischen 4 und 6."}, {"id": "t1_006", "topic": "1. Betriebliches Rechnungswesen", "type": "order", "difficulty": "mittel", "prompt": "Bringe die Bücher des HGB in die richtige Reihenfolge.", "items": ["Handelsstand", "Handelsgesellschaften und stille Gesellschaft", "Handelsbücher", "Handelsgeschäfte", "Seehandel"], "answer": ["Handelsstand", "Handelsgesellschaften und stille Gesellschaft", "Handelsbücher", "Handelsgeschäfte", "Seehandel"], "explanation": "Reihenfolge: Handelsstand, Handelsgesellschaften und stille Gesellschaft, Handelsbücher, Handelsgeschäfte, Seehandel.", "hint": "Erstes Buch: Handelsstand. Letztes Buch: Seehandel."}, {"id": "t1_007", "topic": "1. Betriebliches Rechnungswesen", "type": "single", "difficulty": "leicht", "prompt": "Wer ist nach § 238 HGB buchführungspflichtig?", "options": ["Jeder Kaufmann", "Jeder Arbeitnehmer", "Jeder Lieferant", "Jeder Kunde"], "answer": 0, "explanation": "Nach § 238 HGB ist jeder Kaufmann buchführungspflichtig.", "hint": "Der zentrale Begriff ist Kaufmann."}, {"id": "t1_008", "topic": "1. Betriebliches Rechnungswesen", "type": "match", "difficulty": "leicht", "prompt": "Ordne die Arten der Buchführung zu.", "pairs": [["Kameralistik", "öffentliche Verwaltung"], ["Einfache Buchführung", "kaufmännische Buchführung"], ["Doppelte Buchführung", "kaufmännische Buchführung"]], "explanation": "Kameralistik gehört zur öffentlichen Verwaltung; einfache und doppelte Buchführung zur kaufmännischen Buchführung.", "hint": "Kameralistik = Verwaltung."}, {"id": "t1_009", "topic": "1. Betriebliches Rechnungswesen", "type": "single", "difficulty": "mittel", "prompt": "Was liegt vor? Ein Unternehmen kauft Waren auf Ziel.", "options": ["Ausgabe", "Auszahlung", "Aufwand", "Ertrag", "Einnahme", "Einzahlung", "Ausgabe + Auszahlung", "Ertrag + Einnahme", "Ertrag + Einnahme + Einzahlung"], "answer": 0, "explanation": "Kauf auf Ziel: Verpflichtung entsteht, aber noch keine Zahlung.", "hint": "Prüfe: Entsteht eine Verpflichtung? Fließt Geld? Entsteht Erfolg?"}, {"id": "t1_010", "topic": "1. Betriebliches Rechnungswesen", "type": "single", "difficulty": "mittel", "prompt": "Was liegt vor? Ein Unternehmen kauft Waren bar.", "options": ["Ausgabe", "Auszahlung", "Aufwand", "Ertrag", "Einnahme", "Einzahlung", "Ausgabe + Auszahlung", "Ertrag + Einnahme", "Ertrag + Einnahme + Einzahlung"], "answer": 6, "explanation": "Bei Barkauf entsteht eine Ausgabe und sofort eine Auszahlung.", "hint": "Prüfe: Entsteht eine Verpflichtung? Fließt Geld? Entsteht Erfolg?"}, {"id": "t1_011", "topic": "1. Betriebliches Rechnungswesen", "type": "single", "difficulty": "mittel", "prompt": "Was liegt vor? Eine Maschine wird planmäßig abgeschrieben.", "options": ["Ausgabe", "Auszahlung", "Aufwand", "Ertrag", "Einnahme", "Einzahlung", "Ausgabe + Auszahlung", "Ertrag + Einnahme", "Ertrag + Einnahme + Einzahlung"], "answer": 2, "explanation": "Abschreibung ist Aufwand, aber kein aktueller Geldabfluss.", "hint": "Prüfe: Entsteht eine Verpflichtung? Fließt Geld? Entsteht Erfolg?"}, {"id": "t1_012", "topic": "1. Betriebliches Rechnungswesen", "type": "single", "difficulty": "mittel", "prompt": "Was liegt vor? Ein Kunde bezahlt eine alte Forderung per Überweisung.", "options": ["Ausgabe", "Auszahlung", "Aufwand", "Ertrag", "Einnahme", "Einzahlung", "Ausgabe + Auszahlung", "Ertrag + Einnahme", "Ertrag + Einnahme + Einzahlung"], "answer": 5, "explanation": "Forderung bestand schon; jetzt fließt nur Geld zu.", "hint": "Prüfe: Entsteht eine Verpflichtung? Fließt Geld? Entsteht Erfolg?"}, {"id": "t1_013", "topic": "1. Betriebliches Rechnungswesen", "type": "single", "difficulty": "mittel", "prompt": "Was liegt vor? Ein langfristiges Darlehen wird auf das Bankkonto überwiesen.", "options": ["Ausgabe", "Auszahlung", "Aufwand", "Ertrag", "Einnahme", "Einzahlung", "Ausgabe + Auszahlung", "Ertrag + Einnahme", "Ertrag + Einnahme + Einzahlung"], "answer": 5, "explanation": "Geldzufluss, aber keine Einnahme/kein Ertrag.", "hint": "Prüfe: Entsteht eine Verpflichtung? Fließt Geld? Entsteht Erfolg?"}, {"id": "t1_014", "topic": "1. Betriebliches Rechnungswesen", "type": "single", "difficulty": "mittel", "prompt": "Was liegt vor? Fertigerzeugnisse werden auf Ziel verkauft.", "options": ["Ausgabe", "Auszahlung", "Aufwand", "Ertrag", "Einnahme", "Einzahlung", "Ausgabe + Auszahlung", "Ertrag + Einnahme", "Ertrag + Einnahme + Einzahlung"], "answer": 7, "explanation": "Verkauf auf Ziel: Leistung ist erbracht, Forderung entsteht, aber keine Einzahlung.", "hint": "Prüfe: Entsteht eine Verpflichtung? Fließt Geld? Entsteht Erfolg?"}, {"id": "t1_015", "topic": "1. Betriebliches Rechnungswesen", "type": "single", "difficulty": "mittel", "prompt": "Was liegt vor? Ein Kunde zahlt sofort bar für verkaufte Waren.", "options": ["Ausgabe", "Auszahlung", "Aufwand", "Ertrag", "Einnahme", "Einzahlung", "Ausgabe + Auszahlung", "Ertrag + Einnahme", "Ertrag + Einnahme + Einzahlung"], "answer": 8, "explanation": "Barverkauf führt zu Ertrag, Einnahme und Einzahlung.", "hint": "Prüfe: Entsteht eine Verpflichtung? Fließt Geld? Entsteht Erfolg?"}, {"id": "t2_001", "topic": "2. Bestandserfassung", "type": "calc", "difficulty": "mittel", "prompt": "EK Ende 80.000 €, EK Anfang 50.000 €, Privatentnahmen 15.000 €, Privateinlagen 10.000 €. Wie hoch ist der Gewinn?", "answer": 35000, "tolerance": 0.01, "steps": ["Gewinn = EK Ende − EK Anfang + Entnahmen − Einlagen", "80.000 − 50.000 + 15.000 − 10.000 = 35.000"], "explanation": "Entnahmen werden addiert, Einlagen abgezogen, weil sie das Eigenkapital beeinflussen, aber nicht aus dem Betriebserfolg stammen.", "hint": "Formel: EK Ende − EK Anfang + Entnahmen − Einlagen."}, {"id": "t2_002", "topic": "2. Bestandserfassung", "type": "calc", "difficulty": "mittel", "prompt": "EK Ende 120.000 €, EK Anfang 90.000 €, Privatentnahmen 12.000 €, Privateinlagen 5.000 €. Gewinn?", "answer": 37000, "tolerance": 0.01, "steps": ["120.000 − 90.000 + 12.000 − 5.000 = 37.000"], "explanation": "Der Gewinn beträgt 37.000 €.", "hint": "Entnahmen plus, Einlagen minus."}, {"id": "t2_003", "topic": "2. Bestandserfassung", "type": "multi", "difficulty": "mittel", "prompt": "Welche Inventursysteme betreffen den Zeitpunkt bzw. Zeitraum der Aufnahme?", "options": ["Stichtagsinventur", "Zeitnahe Inventur", "Vorverlegte Inventur", "Nachverlegte Inventur", "Permanente Inventur", "Stichprobeninventur", "Improvisierte Inventur"], "answer": [0, 1, 2, 3, 4], "explanation": "Stichprobeninventur ist ein Inventurverfahren, nicht das Zeitpunkt-System. Improvisierte Inventur ist ein Ablenker.", "hint": "Nicht jedes Wort mit Inventur ist ein Zeitpunkt-System."}, {"id": "t2_004", "topic": "2. Bestandserfassung", "type": "single", "difficulty": "mittel", "prompt": "Vorverlegte Inventur bedeutet ...", "options": ["Wertrückrechnung", "Wertfortschreibung", "keine Bewertung", "nur Stichproben"], "answer": 1, "explanation": "Bei vorverlegter Inventur wird vom Inventurtag auf den Bilanzstichtag fortgeschrieben.", "hint": "Vor dem Stichtag aufgenommen → nach vorne fortschreiben."}, {"id": "t2_005", "topic": "2. Bestandserfassung", "type": "single", "difficulty": "mittel", "prompt": "Nachverlegte Inventur bedeutet ...", "options": ["Wertfortschreibung", "Wertrückrechnung", "nur körperliche Aufnahme", "keine GoB"], "answer": 1, "explanation": "Bei nachverlegter Inventur wird auf den Bilanzstichtag zurückgerechnet.", "hint": "Nach dem Stichtag aufgenommen → zurückrechnen."}, {"id": "t2_006", "topic": "2. Bestandserfassung", "type": "calc", "difficulty": "mittel", "prompt": "Vorverlegte Inventur: Bestand Inventurtag 40.000 €, Zugänge 8.000 €, Abgänge 3.000 €. Bestand Bilanzstichtag?", "answer": 45000, "tolerance": 0.01, "steps": ["40.000 + 8.000 − 3.000 = 45.000"], "explanation": "Bei Wertfortschreibung werden Zugänge addiert und Abgänge abgezogen.", "hint": "Bestand + Zugänge − Abgänge."}, {"id": "t2_007", "topic": "2. Bestandserfassung", "type": "calc", "difficulty": "mittel", "prompt": "Vorverlegte Inventur: Bestand Inventurtag 70.000 €, Zugänge 12.000 €, Abgänge 20.000 €. Bestand Bilanzstichtag?", "answer": 62000, "tolerance": 0.01, "steps": ["70.000 + 12.000 − 20.000 = 62.000"], "explanation": "Zugänge erhöhen, Abgänge vermindern den Bestand.", "hint": "Wertfortschreibung."}, {"id": "t2_008", "topic": "2. Bestandserfassung", "type": "multi", "difficulty": "mittel", "prompt": "Welche Voraussetzungen gelten für die permanente Inventur?", "options": ["Ordnungsmäßige Lagerbuchführung", "Planmäßige körperliche Aufnahme", "Sorgfältige Analyse von Abweichungen", "Mindestens einmal jährlich körperliche Aufnahme", "Elektronische Scanner zwingend notwendig", "Zufällige Auswahl der Elemente"], "answer": [0, 1, 2, 3], "explanation": "Scanner und Zufallsauswahl sind keine zwingenden Voraussetzungen.", "hint": "Es geht um Ordnungsmäßigkeit, Planung und Kontrolle."}, {"id": "t2_009", "topic": "2. Bestandserfassung", "type": "multi", "difficulty": "mittel", "prompt": "Wann ist eine permanente Inventur problematisch bzw. nicht geeignet?", "options": ["Bei starkem Schwund/Verderb", "Bei Zerbrechlichkeit/Diebstahlgefahr", "Bei starker Bewegung und erheblichen Mengendifferenzen", "Bei besonders wertvollen und leicht aufzunehmenden Gegenständen", "Bei geringer Bewegung und kaum Mengendifferenzen"], "answer": [0, 1, 2, 3], "explanation": "Bei wertvollen, leicht aufzunehmenden oder stark schwankenden Gütern ist permanente Inventur eher ungeeignet. Geringe Bewegung und kaum Differenzen sprechen nicht dagegen.", "hint": "Wo häufig Differenzen entstehen, ist permanente Inventur riskanter."}, {"id": "t2_010", "topic": "2. Bestandserfassung", "type": "multi", "difficulty": "mittel", "prompt": "Welche Inventurverfahren nach Art der Aufnahme gibt es?", "options": ["Körperliche vollständige Bestandsaufnahme", "Körperliche stichprobenbasierte Bestandsaufnahme", "Bestandsaufnahme anhand von Dokumenten", "Buchmäßige Bestandsaufnahme", "Improvisierte Aufnahme"], "answer": [0, 1, 2, 3], "explanation": "Die vier genannten Verfahren sind relevant. Improvisiert ist kein reguläres Verfahren.", "hint": "Körperlich, Dokumente, buchmäßig."}, {"id": "t2_011", "topic": "2. Bestandserfassung", "type": "multi", "difficulty": "mittel", "prompt": "Welche Voraussetzungen gelten für die Stichprobeninventur?", "options": ["Anerkannte mathematisch-statistische Modelle", "Beachtung der GoB", "Aussageäquivalenz zur Vollinventur", "Muss genauso lange dauern wie Vollinventur", "Nur gesetzlich vorgeschriebene Modelle"], "answer": [0, 1, 2], "explanation": "Stichprobeninventur muss mathematisch-statistisch anerkannt, GoB-konform und aussagegleich zur Vollinventur sein.", "hint": "Die Aussagekraft soll wie bei einer Vollinventur sein."}, {"id": "t3_001", "topic": "3. Ausweis", "type": "single", "difficulty": "leicht", "prompt": "Wie definiert der Gesetzgeber den Begriff Bilanz?", "options": ["Verhältnis von Anlage- und Umlaufvermögen", "Verhältnis von Vermögen und Schulden", "Verhältnis von Aufwand und Ertrag"], "answer": 1, "explanation": "Die Bilanz stellt Vermögen und Schulden gegenüber.", "hint": "Aktiva und Passiva."}, {"id": "t3_002", "topic": "3. Ausweis", "type": "single", "difficulty": "leicht", "prompt": "Der Jahresabschluss besteht aus ...", "options": ["Bilanz und GuV", "Inventar und Inventur", "Bilanz und Inventar", "Eröffnungsbilanz und Inventar"], "answer": 0, "explanation": "Jahresabschluss = Bilanz + Gewinn- und Verlustrechnung.", "hint": "GuV gehört dazu."}, {"id": "t3_003", "topic": "3. Ausweis", "type": "match", "difficulty": "leicht", "prompt": "Ordne die Bilanzseiten zu.", "pairs": [["Linke Seite", "Aktiva"], ["Rechte Seite", "Passiva"]], "explanation": "Aktiva links, Passiva rechts.", "hint": "Aktiva links."}, {"id": "t3_004", "topic": "3. Ausweis", "type": "single", "difficulty": "leicht", "prompt": "In welcher Sprache ist der Jahresabschluss aufzustellen?", "options": ["Englisch", "Deutsch", "Latein", "beliebig"], "answer": 1, "explanation": "Der Jahresabschluss ist in deutscher Sprache aufzustellen.", "hint": "Amtssprache."}, {"id": "t3_005", "topic": "3. Ausweis", "type": "single", "difficulty": "leicht", "prompt": "In welcher Währung ist der Jahresabschluss aufzustellen?", "options": ["Euro", "US-Dollar", "Yuan", "Schweizer Franken"], "answer": 0, "explanation": "Der Jahresabschluss ist in Euro aufzustellen.", "hint": "Währung in Deutschland."}, {"id": "t3_006", "topic": "3. Ausweis", "type": "single", "difficulty": "mittel", "prompt": "Die Aktivseite zeigt vor allem ...", "options": ["Mittelherkunft", "Mittelverwendung", "nur Schulden", "nur Eigenkapital"], "answer": 1, "explanation": "Aktiva zeigen die Verwendung der finanziellen Mittel bzw. Vermögensgegenstände.", "hint": "Wo steckt das Geld?"}, {"id": "t3_007", "topic": "3. Ausweis", "type": "single", "difficulty": "mittel", "prompt": "Die Passivseite zeigt vor allem ...", "options": ["Mittelverwendung", "Mittelherkunft", "nur Vermögensgegenstände", "nur Vorräte"], "answer": 1, "explanation": "Passiva zeigen die Herkunft der finanziellen Mittel: Eigenkapital und Fremdkapital.", "hint": "Woher kommt das Geld?"}, {"id": "t3_008", "topic": "3. Ausweis", "type": "tf", "difficulty": "mittel", "prompt": "Bewerte die Aussagen zu Aktiva und Passiva.", "statements": [["Aktiva zeigen die Verwendung finanzieller Mittel.", true], ["Passiva zeigen die Herkunft finanzieller Mittel.", true], ["Aktiva zeigen die Höhe des Eigenkapitals.", false], ["Passiva zeigen die Schulden.", true], ["Aktiva zeigen die Finanzierung der Vermögensgegenstände.", false]], "explanation": "Aktiva = Mittelverwendung, Passiva = Mittelherkunft.", "hint": "Aktiva = Verwendung, Passiva = Herkunft."}, {"id": "t3_009", "topic": "3. Ausweis", "type": "tf", "difficulty": "mittel", "prompt": "Bewerte die Aussagen zu Inventar und Bilanz.", "statements": [["Inventar enthält Mengen- und Wertangaben.", true], ["Bilanz enthält nur Wertangaben.", true], ["Inventar und Bilanz werden beide in Kontoform aufgestellt.", false], ["Inventar ist eine zusammengefasste Darstellung wie die Bilanz.", false]], "explanation": "Inventar ist detailliert mit Mengen und Werten; Bilanz ist zusammengefasst und wertmäßig.", "hint": "Inventar ist ausführlicher."}, {"id": "t3_010", "topic": "3. Ausweis", "type": "tf", "difficulty": "mittel", "prompt": "Welche Bilanzgleichungen sind richtig?", "statements": [["Aktiva = Passiva", true], ["Vermögen = Eigenkapital", false], ["Vermögen = Kapital", true], ["Vermögen = Eigenkapital + Fremdkapital", true]], "explanation": "Vermögen entspricht dem gesamten Kapital, nicht nur dem Eigenkapital.", "hint": "Fremdkapital nicht vergessen."}, {"id": "t3_011", "topic": "3. Ausweis", "type": "match", "difficulty": "leicht", "prompt": "Ordne zu.", "pairs": [["Vermögensgegenstände", "Aktiva"], ["Eigenkapital", "Passiva"], ["Schulden", "Passiva"]], "explanation": "Vermögensgegenstände stehen links, Eigenkapital und Schulden rechts.", "hint": "Passiva = Kapitalquellen."}, {"id": "t3_012", "topic": "3. Ausweis", "type": "match", "difficulty": "mittel", "prompt": "Ordne die Korrekturarten beim Übergang vom Inventar zur Bilanz zu.", "pairs": [["Fehlerhafte Buchungen / Mengenabweichungen", "mengenmäßige Korrektur"], ["Abschlussbuchungen / zukünftige Risiken", "wertmäßige Korrektur"]], "explanation": "Mengenabweichungen sind mengenmäßig, Bewertungs- und Abschlussfragen wertmäßig.", "hint": "Menge oder Wert?"}, {"id": "t4_001", "topic": "4. Technik der Verbuchung", "type": "single", "difficulty": "mittel", "prompt": "Welche Bilanzveränderung liegt vor? Kasse wird auf Bank eingezahlt.", "options": ["Aktivtausch", "Passivtausch", "Aktiv-Passiv-Mehrung", "Aktiv-Passiv-Minderung"], "answer": 0, "explanation": "Bank ↑, Kasse ↓. Beide Aktivkonten.", "hint": "Prüfe, ob Aktiv- und/oder Passivkonten steigen oder sinken."}, {"id": "t4_002", "topic": "4. Technik der Verbuchung", "type": "single", "difficulty": "mittel", "prompt": "Welche Bilanzveränderung liegt vor? Kunde bezahlt Forderung per Bank.", "options": ["Aktivtausch", "Passivtausch", "Aktiv-Passiv-Mehrung", "Aktiv-Passiv-Minderung"], "answer": 0, "explanation": "Bank ↑, Forderungen ↓. Beide Aktivkonten.", "hint": "Prüfe, ob Aktiv- und/oder Passivkonten steigen oder sinken."}, {"id": "t4_003", "topic": "4. Technik der Verbuchung", "type": "single", "difficulty": "mittel", "prompt": "Welche Bilanzveränderung liegt vor? Maschine wird bar gekauft.", "options": ["Aktivtausch", "Passivtausch", "Aktiv-Passiv-Mehrung", "Aktiv-Passiv-Minderung"], "answer": 0, "explanation": "Maschinen ↑, Kasse/Bank ↓. Beide Aktivkonten.", "hint": "Prüfe, ob Aktiv- und/oder Passivkonten steigen oder sinken."}, {"id": "t4_004", "topic": "4. Technik der Verbuchung", "type": "single", "difficulty": "mittel", "prompt": "Welche Bilanzveränderung liegt vor? Lieferantenschuld wird in Darlehen umgewandelt.", "options": ["Aktivtausch", "Passivtausch", "Aktiv-Passiv-Mehrung", "Aktiv-Passiv-Minderung"], "answer": 1, "explanation": "Eine Passivposition sinkt, eine andere steigt.", "hint": "Prüfe, ob Aktiv- und/oder Passivkonten steigen oder sinken."}, {"id": "t4_005", "topic": "4. Technik der Verbuchung", "type": "single", "difficulty": "mittel", "prompt": "Welche Bilanzveränderung liegt vor? Gläubiger wird Gesellschafter.", "options": ["Aktivtausch", "Passivtausch", "Aktiv-Passiv-Mehrung", "Aktiv-Passiv-Minderung"], "answer": 1, "explanation": "Fremdkapital sinkt, Eigenkapital steigt.", "hint": "Prüfe, ob Aktiv- und/oder Passivkonten steigen oder sinken."}, {"id": "t4_006", "topic": "4. Technik der Verbuchung", "type": "single", "difficulty": "mittel", "prompt": "Welche Bilanzveränderung liegt vor? Waren werden auf Ziel gekauft.", "options": ["Aktivtausch", "Passivtausch", "Aktiv-Passiv-Mehrung", "Aktiv-Passiv-Minderung"], "answer": 2, "explanation": "Waren ↑, Verbindlichkeiten ↑.", "hint": "Prüfe, ob Aktiv- und/oder Passivkonten steigen oder sinken."}, {"id": "t4_007", "topic": "4. Technik der Verbuchung", "type": "single", "difficulty": "mittel", "prompt": "Welche Bilanzveränderung liegt vor? Kredit wird aufgenommen und auf Bank überwiesen.", "options": ["Aktivtausch", "Passivtausch", "Aktiv-Passiv-Mehrung", "Aktiv-Passiv-Minderung"], "answer": 2, "explanation": "Bank ↑, Verbindlichkeiten ↑.", "hint": "Prüfe, ob Aktiv- und/oder Passivkonten steigen oder sinken."}, {"id": "t4_008", "topic": "4. Technik der Verbuchung", "type": "single", "difficulty": "mittel", "prompt": "Welche Bilanzveränderung liegt vor? Grundstück wird auf Ziel gekauft.", "options": ["Aktivtausch", "Passivtausch", "Aktiv-Passiv-Mehrung", "Aktiv-Passiv-Minderung"], "answer": 2, "explanation": "Grundstück ↑, Verbindlichkeiten ↑.", "hint": "Prüfe, ob Aktiv- und/oder Passivkonten steigen oder sinken."}, {"id": "t4_009", "topic": "4. Technik der Verbuchung", "type": "single", "difficulty": "mittel", "prompt": "Welche Bilanzveränderung liegt vor? Verbindlichkeiten werden per Bank bezahlt.", "options": ["Aktivtausch", "Passivtausch", "Aktiv-Passiv-Mehrung", "Aktiv-Passiv-Minderung"], "answer": 3, "explanation": "Bank ↓, Verbindlichkeiten ↓.", "hint": "Prüfe, ob Aktiv- und/oder Passivkonten steigen oder sinken."}, {"id": "t4_010", "topic": "4. Technik der Verbuchung", "type": "single", "difficulty": "mittel", "prompt": "Welche Bilanzveränderung liegt vor? Forderung wird mit Verbindlichkeit verrechnet.", "options": ["Aktivtausch", "Passivtausch", "Aktiv-Passiv-Mehrung", "Aktiv-Passiv-Minderung"], "answer": 3, "explanation": "Forderung ↓ und Verbindlichkeit ↓.", "hint": "Prüfe, ob Aktiv- und/oder Passivkonten steigen oder sinken."}, {"id": "t4_011", "topic": "4. Technik der Verbuchung", "type": "single", "difficulty": "leicht", "prompt": "Wie werden Mehrungen auf Aktivkonten gebucht?", "options": ["Soll", "Haben"], "answer": 0, "explanation": "Aktivkonten nehmen im Soll zu.", "hint": "Aktiv: plus im Soll."}, {"id": "t4_012", "topic": "4. Technik der Verbuchung", "type": "single", "difficulty": "leicht", "prompt": "Wie werden Minderungen auf Aktivkonten gebucht?", "options": ["Soll", "Haben"], "answer": 1, "explanation": "Aktivkonten nehmen im Haben ab.", "hint": "Aktiv: minus im Haben."}, {"id": "t4_013", "topic": "4. Technik der Verbuchung", "type": "single", "difficulty": "leicht", "prompt": "Wie werden Mehrungen auf Passivkonten gebucht?", "options": ["Soll", "Haben"], "answer": 1, "explanation": "Passivkonten nehmen im Haben zu.", "hint": "Passiv: plus im Haben."}, {"id": "t4_014", "topic": "4. Technik der Verbuchung", "type": "single", "difficulty": "leicht", "prompt": "Wie werden Minderungen auf Passivkonten gebucht?", "options": ["Soll", "Haben"], "answer": 0, "explanation": "Passivkonten nehmen im Soll ab.", "hint": "Passiv: minus im Soll."}, {"id": "t4_015", "topic": "4. Technik der Verbuchung", "type": "fill", "difficulty": "mittel", "prompt": "Bilde den Buchungssatz: Bargeld wird auf das Bankkonto eingezahlt. ____ an ____", "answers": ["Bank an Kasse", "Bank an Kasse", "Bank an Kasse"], "explanation": "Richtig: Bank an Kasse.", "hint": "Immer: Sollkonto an Habenkonto."}, {"id": "t4_016", "topic": "4. Technik der Verbuchung", "type": "fill", "difficulty": "mittel", "prompt": "Bilde den Buchungssatz: Ein Fahrzeug wird auf Ziel gekauft. ____ an ____", "answers": ["Fuhrpark an Verbindlichkeiten aus LuL", "Fuhrpark an Verbindlichkeiten LuL", "Fuhrpark an Verbindlichkeiten aus LuL"], "explanation": "Richtig: Fuhrpark an Verbindlichkeiten aus LuL.", "hint": "Immer: Sollkonto an Habenkonto."}, {"id": "t4_017", "topic": "4. Technik der Verbuchung", "type": "fill", "difficulty": "mittel", "prompt": "Bilde den Buchungssatz: Eine Maschine wird auf Ziel gekauft. ____ an ____", "answers": ["Maschinen an Verbindlichkeiten aus LuL", "Maschinen an Verbindlichkeiten LuL", "Maschinen an Verbindlichkeiten aus LuL"], "explanation": "Richtig: Maschinen an Verbindlichkeiten aus LuL.", "hint": "Immer: Sollkonto an Habenkonto."}, {"id": "t4_018", "topic": "4. Technik der Verbuchung", "type": "fill", "difficulty": "mittel", "prompt": "Bilde den Buchungssatz: Kunde bezahlt Forderung bar. ____ an ____", "answers": ["Kasse an Forderungen aus LuL", "Kasse an Forderungen LuL", "Kasse an Forderungen aus LuL"], "explanation": "Richtig: Kasse an Forderungen aus LuL.", "hint": "Immer: Sollkonto an Habenkonto."}, {"id": "t4_019", "topic": "4. Technik der Verbuchung", "type": "fill", "difficulty": "mittel", "prompt": "Bilde den Buchungssatz: Kredit wird auf Bankkonto überwiesen. ____ an ____", "answers": ["Bank an Verbindlichkeiten gegenüber Kreditinstituten", "Bank an Verbindlichkeiten gegenüber Kreditinstituten", "Bank an Verbindlichkeiten ggü. Kreditinstituten"], "explanation": "Richtig: Bank an Verbindlichkeiten gegenüber Kreditinstituten.", "hint": "Immer: Sollkonto an Habenkonto."}, {"id": "t4_020", "topic": "4. Technik der Verbuchung", "type": "fill", "difficulty": "mittel", "prompt": "Bilde den Buchungssatz: Ein Gesellschafter zahlt bar ein. ____ an ____", "answers": ["Kasse an Privateinlage", "Kasse an Privateinlage", "Kasse an Privateinlage"], "explanation": "Richtig: Kasse an Privateinlage.", "hint": "Immer: Sollkonto an Habenkonto."}, {"id": "t4_021", "topic": "4. Technik der Verbuchung", "type": "fill", "difficulty": "mittel", "prompt": "Bilde den Buchungssatz: Der Unternehmer entnimmt Bargeld privat. ____ an ____", "answers": ["Privatentnahmen an Kasse", "Privatentnahmen an Kasse", "Privatentnahmen an Kasse"], "explanation": "Richtig: Privatentnahmen an Kasse.", "hint": "Immer: Sollkonto an Habenkonto."}, {"id": "t4_022", "topic": "4. Technik der Verbuchung", "type": "fill", "difficulty": "mittel", "prompt": "Bilde den Buchungssatz: Grundstück wird per Banküberweisung gekauft. ____ an ____", "answers": ["Grundstücke an Bank", "Grundstücke an Bank", "Grundstücke an Bank"], "explanation": "Richtig: Grundstücke an Bank.", "hint": "Immer: Sollkonto an Habenkonto."}, {"id": "t5_001", "topic": "5. Warenverkehr", "type": "calc", "difficulty": "leicht", "prompt": "Warenpreis 50.000 € netto, 10 % Rabatt. Nettobetrag nach Rabatt?", "answer": 45000, "tolerance": 0.01, "steps": ["50.000 × 10 % = 5.000 Rabatt", "50.000 − 5.000 = 45.000"], "explanation": "Rabatt wird sofort vom Preis abgezogen.", "hint": "Rabatt zuerst abziehen."}, {"id": "t5_002", "topic": "5. Warenverkehr", "type": "calc", "difficulty": "mittel", "prompt": "45.000 € netto, 19 % USt. Wie hoch ist der Bruttobetrag?", "answer": 53550, "tolerance": 0.01, "steps": ["USt = 45.000 × 19 % = 8.550", "Brutto = 45.000 + 8.550 = 53.550"], "explanation": "Umsatzsteuer wird auf den Nettobetrag berechnet.", "hint": "Netto × 1,19."}, {"id": "t5_003", "topic": "5. Warenverkehr", "type": "calc", "difficulty": "mittel", "prompt": "Nettoverkauf 18.000 €, 2 % Skonto. Wie hoch ist das Skonto netto?", "answer": 360, "tolerance": 0.01, "steps": ["18.000 × 2 % = 360"], "explanation": "Skonto entsteht erst bei Zahlung.", "hint": "2 % von 18.000."}, {"id": "t5_004", "topic": "5. Warenverkehr", "type": "calc", "difficulty": "mittel", "prompt": "Skonto netto 360 €, 19 % USt. Wie hoch ist die Umsatzsteuerkorrektur?", "answer": 68.4, "tolerance": 0.02, "steps": ["360 × 19 % = 68,40"], "explanation": "Bei Skonto muss auch die Umsatzsteuer korrigiert werden.", "hint": "19 % vom Nettoskonto."}, {"id": "t5_005", "topic": "5. Warenverkehr", "type": "calc", "difficulty": "mittel", "prompt": "Anzahlung 5.950 € brutto bei 19 % USt. Wie hoch ist der Nettobetrag?", "answer": 5000, "tolerance": 0.01, "steps": ["5.950 / 1,19 = 5.000"], "explanation": "Bei Bruttobeträgen wird die Steuer herausgerechnet.", "hint": "Brutto durch 1,19."}, {"id": "t5_006", "topic": "5. Warenverkehr", "type": "calc", "difficulty": "mittel", "prompt": "Anzahlung 5.950 € brutto bei 19 % USt. Wie hoch ist die Vorsteuer?", "answer": 950, "tolerance": 0.01, "steps": ["Netto = 5.950 / 1,19 = 5.000", "Vorsteuer = 5.950 − 5.000 = 950"], "explanation": "Bei geleisteter Anzahlung wird Vorsteuer gebucht.", "hint": "Brutto minus Netto."}, {"id": "t5_007", "topic": "5. Warenverkehr", "type": "calc", "difficulty": "mittel", "prompt": "Warenrücksendung: 34.000 € netto. Wie hoch ist die Umsatzsteuer?", "answer": 6460, "tolerance": 0.01, "steps": ["34.000 × 19 % = 6.460"], "explanation": "Bei Rücksendungen wird die ursprüngliche Buchung inklusive USt rückgängig gemacht.", "hint": "19 % von 34.000."}, {"id": "t5_008", "topic": "5. Warenverkehr", "type": "calc", "difficulty": "mittel", "prompt": "Transportkosten 1.190 € brutto bei 19 % USt. Wie hoch ist der Netto-Transportaufwand?", "answer": 1000, "tolerance": 0.01, "steps": ["1.190 / 1,19 = 1.000"], "explanation": "Transportkosten netto gehören zu den Bezugskosten.", "hint": "Brutto durch 1,19."}, {"id": "t5_009", "topic": "5. Warenverkehr", "type": "calc", "difficulty": "schwer", "prompt": "Warenpreis 50.000 € netto, 10 % Rabatt, Transport 1.000 € netto. Wie hoch ist der Betrag auf dem Wareneinkaufskonto?", "answer": 46000, "tolerance": 0.01, "steps": ["50.000 − 10 % = 45.000", "45.000 + 1.000 Bezugskosten = 46.000"], "explanation": "Bezugskosten gehören zu den Anschaffungsnebenkosten und erhöhen den Wareneinkauf.", "hint": "Rabatt abziehen, Bezugskosten addieren."}, {"id": "t5_010", "topic": "5. Warenverkehr", "type": "single", "difficulty": "leicht", "prompt": "Wann wird Rabatt berücksichtigt?", "options": ["Sofort beim Kauf/Verkauf", "Erst bei Zahlung", "Erst am Jahresende"], "answer": 0, "explanation": "Rabatt ist ein sofortiger Preisnachlass.", "hint": "Rabatt ist nicht vom Zahlungstermin abhängig."}, {"id": "t5_011", "topic": "5. Warenverkehr", "type": "single", "difficulty": "leicht", "prompt": "Wann wird Skonto berücksichtigt?", "options": ["Sofort bei Rechnungserstellung", "Erst bei Zahlung", "Bei Inventur"], "answer": 1, "explanation": "Skonto ist ein Zahlungsabzug bei schneller Zahlung.", "hint": "Skonto = Zahlungsbedingung."}, {"id": "t5_012", "topic": "5. Warenverkehr", "type": "fill", "difficulty": "mittel", "prompt": "Buchungssatz für Transportkosten 1.190 € brutto per Bank: ____ und ____ an ____", "answers": ["Transportaufwand und VSt an Bank", "Transportaufwand und Vorsteuer an Bank", "Transportaufwand VSt an Bank"], "explanation": "Transportaufwand netto und Vorsteuer im Soll, Bank im Haben.", "hint": "Beim Einkauf heißt die Steuer Vorsteuer."}, {"id": "t5_013", "topic": "5. Warenverkehr", "type": "fill", "difficulty": "mittel", "prompt": "Umbuchung der Bezugskosten auf das Wareneinkaufskonto: ____ an ____", "answers": ["WEK an Transportaufwand", "Wareneinkaufskonto an Transportaufwand"], "explanation": "Bezugskosten werden dem Wareneinkauf zugerechnet.", "hint": "Am Ende sollen Bezugskosten im WEK landen."}, {"id": "t6_001", "topic": "6. Materialverbrauch und Bestände", "type": "single", "difficulty": "leicht", "prompt": "Was bedeutet Bestandsmehrung?", "options": ["Endbestand > Anfangsbestand", "Endbestand < Anfangsbestand", "Absatz > Produktion"], "answer": 0, "explanation": "Bestandsmehrung liegt vor, wenn der Endbestand größer als der Anfangsbestand ist.", "hint": "Lager nimmt zu."}, {"id": "t6_002", "topic": "6. Materialverbrauch und Bestände", "type": "single", "difficulty": "leicht", "prompt": "Was bedeutet Bestandsminderung?", "options": ["Endbestand > Anfangsbestand", "Endbestand < Anfangsbestand", "Produktion > Absatz"], "answer": 1, "explanation": "Bestandsminderung liegt vor, wenn der Endbestand kleiner als der Anfangsbestand ist.", "hint": "Lager nimmt ab."}, {"id": "t6_003", "topic": "6. Materialverbrauch und Bestände", "type": "calc", "difficulty": "mittel", "prompt": "Anfangsbestand 80 Stück, Endbestand 70 Stück. Bestandsveränderung?", "answer": -10, "tolerance": 0.01, "steps": ["Bestandsveränderung = EB − AB", "70 − 80 = −10"], "explanation": "Negativ bedeutet Bestandsminderung von 10 Stück.", "hint": "EB − AB."}, {"id": "t6_004", "topic": "6. Materialverbrauch und Bestände", "type": "calc", "difficulty": "mittel", "prompt": "Anfangsbestand 80 Stück, Endbestand 70 Stück, Absatz 1.200 Stück. Produktion?", "answer": 1190, "tolerance": 0.01, "steps": ["Bestandsminderung = 10", "Produktion = Absatz − Bestandsminderung = 1.200 − 10 = 1.190"], "explanation": "Bei Bestandsminderung wurde mehr verkauft als produziert.", "hint": "Lager sinkt → Produktion kleiner als Absatz."}, {"id": "t6_005", "topic": "6. Materialverbrauch und Bestände", "type": "calc", "difficulty": "leicht", "prompt": "Endbestand 5.600 €, Herstellkosten 80 €/Stück. Endbestand in Stück?", "answer": 70, "tolerance": 0.01, "steps": ["5.600 / 80 = 70"], "explanation": "Bestände werden zu Herstellkosten bewertet, nicht zum Verkaufspreis.", "hint": "Wert durch Herstellkosten je Stück."}, {"id": "t6_006", "topic": "6. Materialverbrauch und Bestände", "type": "calc", "difficulty": "mittel", "prompt": "Anfangsbestand 100 Stück, Endbestand 140 Stück, Absatz 800 Stück. Produktion?", "answer": 840, "tolerance": 0.01, "steps": ["Bestandsmehrung = 140 − 100 = 40", "Produktion = 800 + 40 = 840"], "explanation": "Bei Bestandsmehrung ist Produktion größer als Absatz.", "hint": "Lager steigt → Produktion größer als Absatz."}, {"id": "t6_007", "topic": "6. Materialverbrauch und Bestände", "type": "calc", "difficulty": "mittel", "prompt": "AB Fertigerzeugnisse A 32.000 €, EB 360.000 €. Bestandsveränderung?", "answer": 328000, "tolerance": 0.01, "steps": ["360.000 − 32.000 = 328.000"], "explanation": "Es liegt eine Bestandsmehrung von 328.000 € vor.", "hint": "EB − AB."}, {"id": "t6_008", "topic": "6. Materialverbrauch und Bestände", "type": "calc", "difficulty": "mittel", "prompt": "AB Fertigerzeugnisse B 180.000 €, EB 80.000 €. Bestandsveränderung?", "answer": -100000, "tolerance": 0.01, "steps": ["80.000 − 180.000 = −100.000"], "explanation": "Es liegt eine Bestandsminderung von 100.000 € vor.", "hint": "EB − AB."}, {"id": "t6_009", "topic": "6. Materialverbrauch und Bestände", "type": "fill", "difficulty": "mittel", "prompt": "Buchungssatz bei Bestandsmehrung fertiger Erzeugnisse: ____ an ____", "answers": ["Fertigerzeugnisse an Bestandsveränderungen", "Fertige Erzeugnisse an Bestandsveränderungen"], "explanation": "Bei Bestandsmehrung steigt das Bestandskonto im Soll.", "hint": "Bestand steigt."}, {"id": "t6_010", "topic": "6. Materialverbrauch und Bestände", "type": "fill", "difficulty": "mittel", "prompt": "Buchungssatz bei Bestandsminderung fertiger Erzeugnisse: ____ an ____", "answers": ["Bestandsveränderungen an Fertigerzeugnisse", "Bestandsveränderungen an Fertige Erzeugnisse"], "explanation": "Bei Bestandsminderung sinkt das Bestandskonto im Haben.", "hint": "Bestand sinkt."}, {"id": "t6_011", "topic": "6. Materialverbrauch und Bestände", "type": "fill", "difficulty": "mittel", "prompt": "Abschluss bei Bestandsmehrung: ____ an ____", "answers": ["Bestandsveränderungen an GVK"], "explanation": "Bestandsmehrungen werden über das GVK abgeschlossen.", "hint": "Mehrung: BV an GVK."}, {"id": "t6_012", "topic": "6. Materialverbrauch und Bestände", "type": "fill", "difficulty": "mittel", "prompt": "Abschluss bei Bestandsminderung: ____ an ____", "answers": ["GVK an Bestandsveränderungen"], "explanation": "Bestandsminderungen werden umgekehrt abgeschlossen.", "hint": "Minderung: GVK an BV."}, {"id": "t7_001", "topic": "7. Buchungsprobleme im Anlagevermögen", "type": "tf", "difficulty": "leicht", "prompt": "Bewerte die Aussagen zum Anlagevermögen und Bilanzausweis.", "statements": [["Beim Anlagevermögen sind nur Gegenstände auszuweisen, die bestimmt sind, dauernd dem Finanzbereich zu dienen.", false], ["Beim Anlagevermögen sind nur Gegenstände auszuweisen, die bestimmt sind, dauernd dem Geschäftsbetrieb zu dienen.", true], ["In der Bilanz sind Anlagevermögen, Umlaufvermögen, Eigenkapital, Schulden sowie Rechnungsabgrenzungsposten gesondert auszuweisen und hinreichend aufzugliedern.", true], ["In der Bilanz sind Anlagevermögen, Umlaufvermögen, Eigenkapital, Erträge und Aufwendungen sowie Rechnungsabgrenzungsposten gesondert auszuweisen.", false]], "explanation": "Anlagevermögen dient dauerhaft dem Geschäftsbetrieb. Erträge und Aufwendungen gehören in die GuV, nicht als Bilanzposten in diese Aufzählung.", "hint": "Anlagevermögen = dauernd dem Geschäftsbetrieb. Erträge/Aufwendungen = GuV."}, {"id": "t7_002", "topic": "7. Buchungsprobleme im Anlagevermögen", "type": "single", "difficulty": "leicht", "prompt": "Richtig oder falsch? Anlagevermögen dient dauerhaft dem Finanzbereich.", "options": ["Richtig", "Falsch"], "answer": 1, "explanation": "Falsch: Anlagevermögen dient dauerhaft dem Geschäftsbetrieb, nicht dem Finanzbereich.", "hint": "Prüfe, ob es um Bilanz oder GuV geht."}, {"id": "t7_003", "topic": "7. Buchungsprobleme im Anlagevermögen", "type": "single", "difficulty": "leicht", "prompt": "Richtig oder falsch? Anlagevermögen dient dauerhaft dem Geschäftsbetrieb.", "options": ["Richtig", "Falsch"], "answer": 0, "explanation": "Richtig: Das ist der Kern des Anlagevermögens.", "hint": "Prüfe, ob es um Bilanz oder GuV geht."}, {"id": "t7_004", "topic": "7. Buchungsprobleme im Anlagevermögen", "type": "single", "difficulty": "leicht", "prompt": "Richtig oder falsch? Erträge und Aufwendungen sind typische Bilanzposten.", "options": ["Richtig", "Falsch"], "answer": 1, "explanation": "Falsch: Erträge und Aufwendungen gehören in die Gewinn- und Verlustrechnung.", "hint": "Prüfe, ob es um Bilanz oder GuV geht."}, {"id": "t7_005", "topic": "7. Buchungsprobleme im Anlagevermögen", "type": "single", "difficulty": "leicht", "prompt": "Richtig oder falsch? Rechnungsabgrenzungsposten sind in der Bilanz gesondert auszuweisen.", "options": ["Richtig", "Falsch"], "answer": 0, "explanation": "Richtig: Rechnungsabgrenzungsposten gehören zum Bilanzausweis.", "hint": "Prüfe, ob es um Bilanz oder GuV geht."}, {"id": "t7_006", "topic": "7. Buchungsprobleme im Anlagevermögen", "type": "match", "difficulty": "mittel", "prompt": "Ordne die Vermögensgegenstände dem richtigen Wertmaßstab zu.", "pairs": [["Herstellte Anlagegüter", "Herstellungskosten"], ["Herstellte Erzeugnisse", "Herstellungskosten"], ["Angeschaffte Anlagegüter", "Anschaffungskosten"], ["Roh-, Hilfs- und Betriebsstoffe", "Anschaffungskosten"], ["Handelswaren", "Anschaffungskosten"]], "explanation": "Selbst hergestellte Güter werden mit Herstellungskosten bewertet. Gekaufte Güter werden mit Anschaffungskosten bewertet.", "hint": "Selbst hergestellt = Herstellungskosten. Gekauft = Anschaffungskosten."}, {"id": "t7_007", "topic": "7. Buchungsprobleme im Anlagevermögen", "type": "single", "difficulty": "leicht", "prompt": "Mit welchem Wertmaßstab wird bewertet? Herstellte Anlagegüter", "options": ["Anschaffungskosten", "Herstellungskosten"], "answer": 1, "explanation": "Herstellte Anlagegüter → Herstellungskosten.", "hint": "Wurde es gekauft oder selbst hergestellt?"}, {"id": "t7_008", "topic": "7. Buchungsprobleme im Anlagevermögen", "type": "single", "difficulty": "leicht", "prompt": "Mit welchem Wertmaßstab wird bewertet? Herstellte Erzeugnisse", "options": ["Anschaffungskosten", "Herstellungskosten"], "answer": 1, "explanation": "Herstellte Erzeugnisse → Herstellungskosten.", "hint": "Wurde es gekauft oder selbst hergestellt?"}, {"id": "t7_009", "topic": "7. Buchungsprobleme im Anlagevermögen", "type": "single", "difficulty": "leicht", "prompt": "Mit welchem Wertmaßstab wird bewertet? Angeschaffte Anlagegüter", "options": ["Anschaffungskosten", "Herstellungskosten"], "answer": 0, "explanation": "Angeschaffte Anlagegüter → Anschaffungskosten.", "hint": "Wurde es gekauft oder selbst hergestellt?"}, {"id": "t7_010", "topic": "7. Buchungsprobleme im Anlagevermögen", "type": "single", "difficulty": "leicht", "prompt": "Mit welchem Wertmaßstab wird bewertet? Roh-, Hilfs- und Betriebsstoffe", "options": ["Anschaffungskosten", "Herstellungskosten"], "answer": 0, "explanation": "Roh-, Hilfs- und Betriebsstoffe → Anschaffungskosten.", "hint": "Wurde es gekauft oder selbst hergestellt?"}, {"id": "t7_011", "topic": "7. Buchungsprobleme im Anlagevermögen", "type": "single", "difficulty": "leicht", "prompt": "Mit welchem Wertmaßstab wird bewertet? Handelswaren", "options": ["Anschaffungskosten", "Herstellungskosten"], "answer": 0, "explanation": "Handelswaren → Anschaffungskosten.", "hint": "Wurde es gekauft oder selbst hergestellt?"}, {"id": "t7_012", "topic": "7. Buchungsprobleme im Anlagevermögen", "type": "single", "difficulty": "mittel", "prompt": "Welche Berechnungsweise der Anschaffungskosten ist richtig?", "options": ["Anschaffungspreis + Anschaffungspreisminderungen - Anschaffungsnebenkosten - nachträgliche Anschaffungskosten", "Anschaffungspreis - Anschaffungspreisminderungen + Anschaffungsnebenkosten - nachträgliche Anschaffungskosten", "Anschaffungspreis - Anschaffungspreisminderungen + Anschaffungsnebenkosten + nachträgliche Anschaffungskosten", "Anschaffungspreis + Anschaffungspreisminderungen + Anschaffungsnebenkosten + nachträgliche Anschaffungskosten"], "answer": 2, "explanation": "Anschaffungskosten = Anschaffungspreis − Anschaffungspreisminderungen + einzeln zurechenbare Anschaffungsnebenkosten + nachträgliche Anschaffungskosten.", "hint": "Rabatte/Skonti mindern, Nebenkosten und nachträgliche Kosten erhöhen."}, {"id": "t7_013", "topic": "7. Buchungsprobleme im Anlagevermögen", "type": "fill", "difficulty": "mittel", "prompt": "Ergänze die Formel: AK = Anschaffungspreis - ________ + Anschaffungsnebenkosten + ________.", "answers": ["Anschaffungspreisminderungen nachträgliche Anschaffungskosten", "Anschaffungspreisminderungen, nachträgliche Anschaffungskosten", "Anschaffungspreisminderungen nachtraegliche Anschaffungskosten"], "explanation": "AK = Anschaffungspreis − Anschaffungspreisminderungen + Anschaffungsnebenkosten + nachträgliche Anschaffungskosten.", "hint": "Was mindert den Preis? Welche Kosten können später noch dazukommen?"}, {"id": "t7_014", "topic": "7. Buchungsprobleme im Anlagevermögen", "type": "calc", "difficulty": "schwer", "prompt": "Maschine: Listenpreis 30.000 € netto, Sofortrabatt 5 %, Transport durch Spediteur 2.380 € brutto (19 % USt), innerbetrieblicher Transport 400 €, Montage- und Fundamentarbeiten 2.000 €. Wie hoch sind die Anschaffungskosten laut OLAT-Lösung?", "answer": 32500, "tolerance": 0.01, "steps": ["Listenpreis 30.000 € − 5 % Rabatt = 28.500 €", "Transport 2.380 € brutto / 1,19 = 2.000 € netto", "Nach OLAT-Lösung: 28.500 + 2.000 + 2.000 = 32.500 €", "Die innerbetrieblichen Transportkosten von 400 € wurden in dieser Lösung nicht einbezogen."], "explanation": "Nach der gezeigten OLAT-Lösung beträgt das Ergebnis 32.500 €. Wichtig: In der App orientieren wir uns hier an der Klausurlösung.", "hint": "Rabatt abziehen, USt aus Transport herausrechnen, Montage/Fundament dazurechnen."}, {"id": "t7_015", "topic": "7. Buchungsprobleme im Anlagevermögen", "type": "calc", "difficulty": "mittel", "prompt": "Maschine: Listenpreis 30.000 €, Sofortrabatt 5 %. Wie hoch ist der Anschaffungspreis nach Rabatt?", "answer": 28500, "tolerance": 0.01, "steps": ["Rabatt = 30.000 × 5 % = 1.500", "30.000 − 1.500 = 28.500"], "explanation": "Anschaffungspreisminderungen werden abgezogen.", "hint": "5 % von 30.000 berechnen und abziehen."}, {"id": "t7_016", "topic": "7. Buchungsprobleme im Anlagevermögen", "type": "calc", "difficulty": "mittel", "prompt": "Transportkosten 2.380 € brutto bei 19 % USt. Wie hoch ist der netto aktivierungsfähige Transportbetrag?", "answer": 2000, "tolerance": 0.01, "steps": ["2.380 / 1,19 = 2.000"], "explanation": "Vorsteuer gehört nicht zu den Anschaffungskosten, daher wird netto gerechnet.", "hint": "Bruttobetrag durch 1,19 teilen."}, {"id": "t7_017", "topic": "7. Buchungsprobleme im Anlagevermögen", "type": "calc", "difficulty": "mittel", "prompt": "Anschaffungspreis nach Rabatt 28.500 €, Transport netto 2.000 €, Montage/Fundament 2.000 €. Wie hoch sind die Anschaffungskosten?", "answer": 32500, "tolerance": 0.01, "steps": ["28.500 + 2.000 + 2.000 = 32.500"], "explanation": "Einzeln zurechenbare Anschaffungsnebenkosten und nachträgliche Anschaffungskosten werden aktiviert.", "hint": "Alles addieren, was direkt zurechenbar ist."}, {"id": "t7_018", "topic": "7. Buchungsprobleme im Anlagevermögen", "type": "calc", "difficulty": "mittel", "prompt": "Anlagegut: Listenpreis 50.000 €, Rabatt 10 %, Transport netto 1.500 €, Montage 2.500 €. Anschaffungskosten?", "answer": 49000, "tolerance": 0.01, "steps": ["50.000 − 10 % = 45.000", "45.000 + 1.500 + 2.500 = 49.000"], "explanation": "Rabatt mindert, Transport und Montage erhöhen die Anschaffungskosten.", "hint": "Preis nach Rabatt plus Nebenkosten."}, {"id": "t7_019", "topic": "7. Buchungsprobleme im Anlagevermögen", "type": "calc", "difficulty": "mittel", "prompt": "Anlagegut: Listenpreis 80.000 €, Rabatt 5 %, Transport 1.190 € brutto, Fundament 4.000 €. Anschaffungskosten?", "answer": 81000, "tolerance": 0.01, "steps": ["80.000 − 5 % = 76.000", "Transport netto = 1.190 / 1,19 = 1.000", "76.000 + 1.000 + 4.000 = 81.000"], "explanation": "Vorsteuer gehört nicht zu den Anschaffungskosten.", "hint": "Transport erst netto rechnen."}, {"id": "t7_020", "topic": "7. Buchungsprobleme im Anlagevermögen", "type": "single", "difficulty": "leicht", "prompt": "Richtig oder falsch? Gemeinkosten dürfen in die Anschaffungskosten einbezogen werden.", "options": ["Richtig", "Falsch"], "answer": 1, "explanation": "Falsch. Allgemeine Gemeinkosten gehören nicht zu den Anschaffungskosten. Aktiviert werden nur einzeln zurechenbare Kosten.", "hint": "Einzeln zurechenbar ist entscheidend."}, {"id": "t7_021", "topic": "7. Buchungsprobleme im Anlagevermögen", "type": "multi", "difficulty": "mittel", "prompt": "Welche Kosten gehören grundsätzlich zu den Anschaffungskosten eines Anlageguts?", "options": ["Anschaffungspreis nach Rabatt", "Einzeln zurechenbare Transportkosten", "Montagekosten", "Fundamentierungskosten", "Allgemeine Gemeinkosten", "Vorsteuer bei Vorsteuerabzugsberechtigung"], "answer": [0, 1, 2, 3], "explanation": "Aktivierbar sind Anschaffungspreis nach Minderungen sowie einzeln zurechenbare Neben- und nachträgliche Anschaffungskosten. Vorsteuer und allgemeine Gemeinkosten gehören nicht dazu.", "hint": "Direkt zurechenbar ja, allgemeine Kosten nein."}, {"id": "t7_022", "topic": "7. Buchungsprobleme im Anlagevermögen", "type": "tf", "difficulty": "mittel", "prompt": "Bewerte die Aussagen zu Anschaffungskosten.", "statements": [["Rabatte mindern die Anschaffungskosten.", true], ["Transportkosten können zu den Anschaffungskosten gehören.", true], ["Vorsteuer gehört bei Vorsteuerabzugsberechtigung zu den Anschaffungskosten.", false], ["Allgemeine Gemeinkosten gehören immer zu den Anschaffungskosten.", false], ["Montagekosten können Anschaffungskosten sein.", true]], "explanation": "Rabatte mindern, direkt zurechenbare Nebenkosten erhöhen. Vorsteuer und allgemeine Gemeinkosten gehören nicht zu den AK.", "hint": "Netto und direkt zurechenbar denken."}, {"id": "t7_023", "topic": "7. Buchungsprobleme im Anlagevermögen", "type": "match", "difficulty": "mittel", "prompt": "Ordne die beiden Möglichkeiten, Anschaffungspreisminderungen zu verbuchen, richtig zu.", "pairs": [["Netto-Erfassung", "Korrektur der Aufwandskonten"], ["Brutto-Erfassung", "Erfassung als Ertrag"]], "explanation": "Bei Netto-Erfassung werden Aufwandskonten korrigiert. Bei Brutto-Erfassung erfolgt die Erfassung als Ertrag.", "hint": "Netto = direkt korrigieren. Brutto = erst erfassen, dann Ertrag."}, {"id": "t7_024", "topic": "7. Buchungsprobleme im Anlagevermögen", "type": "single", "difficulty": "leicht", "prompt": "Was passiert bei der Netto-Erfassung von Anschaffungspreisminderungen?", "options": ["Korrektur der Aufwandskonten", "Erfassung als Ertrag", "Keine Buchung", "Erfassung als Verbindlichkeit"], "answer": 0, "explanation": "Netto-Erfassung bedeutet Korrektur der Aufwandskonten.", "hint": "Netto = Aufwand direkt korrigieren."}, {"id": "t7_025", "topic": "7. Buchungsprobleme im Anlagevermögen", "type": "single", "difficulty": "leicht", "prompt": "Was passiert bei der Brutto-Erfassung von Anschaffungspreisminderungen?", "options": ["Korrektur der Aufwandskonten", "Erfassung als Ertrag", "Erfassung als Privatentnahme", "Keine Buchung"], "answer": 1, "explanation": "Brutto-Erfassung bedeutet Erfassung als Ertrag.", "hint": "Brutto = Minderungen separat als Ertrag."}, {"id": "t7_026", "topic": "7. Buchungsprobleme im Anlagevermögen", "type": "single", "difficulty": "leicht", "prompt": "Wie werden geleistete Anzahlungen im Hinblick auf das Anlagevermögen erfasst?", "options": ["Gar nicht", "Auf einem passiven Bestandskonto", "Auf einem aktiven Bestandskonto „geleistete Anzahlungen“", "Als Ertrag"], "answer": 2, "explanation": "Geleistete Anzahlungen werden auf einem aktiven Bestandskonto erfasst.", "hint": "Du hast bereits etwas gezahlt und dadurch einen Anspruch/Vermögenswert."}, {"id": "t7_027", "topic": "7. Buchungsprobleme im Anlagevermögen", "type": "multi", "difficulty": "mittel", "prompt": "Welche Aussagen zu geleisteten Anzahlungen sind richtig?", "options": ["Geleistete Anzahlungen werden auf einem passiven Bestandskonto erfasst", "Geleistete Anzahlungen sind nicht USt-pflichtig", "Geleistete Anzahlungen werden auf einem aktiven Bestandskonto erfasst", "Bei späterer Lieferung werden die zuvor eingebuchten geleisteten Anzahlungen im Haben ausgebucht", "Geleistete Anzahlungen werden buchhalterisch nicht erfasst", "Geleistete Anzahlungen werden mit erhaltenen Anzahlungen verrechnet"], "answer": [2, 3], "explanation": "Richtig ist: aktives Bestandskonto und spätere Ausbuchung im Haben. Die anderen Aussagen sind Ablenker.", "hint": "Geleistete Anzahlung = Aktivkonto. Bei Lieferung wird dieses Aktivkonto wieder ausgebucht."}, {"id": "t7_028", "topic": "7. Buchungsprobleme im Anlagevermögen", "type": "single", "difficulty": "leicht", "prompt": "Richtig oder falsch? Geleistete Anzahlungen werden auf einem passiven Bestandskonto erfasst.", "options": ["Richtig", "Falsch"], "answer": 1, "explanation": "Falsch. Geleistete Anzahlungen sind aktivisch zu erfassen und werden bei Lieferung ausgebucht.", "hint": "Geleistete Anzahlung = eigener Anspruch, also aktiv."}, {"id": "t7_029", "topic": "7. Buchungsprobleme im Anlagevermögen", "type": "single", "difficulty": "leicht", "prompt": "Richtig oder falsch? Geleistete Anzahlungen sind nicht USt-pflichtig.", "options": ["Richtig", "Falsch"], "answer": 1, "explanation": "Falsch. Geleistete Anzahlungen sind aktivisch zu erfassen und werden bei Lieferung ausgebucht.", "hint": "Geleistete Anzahlung = eigener Anspruch, also aktiv."}, {"id": "t7_030", "topic": "7. Buchungsprobleme im Anlagevermögen", "type": "single", "difficulty": "leicht", "prompt": "Richtig oder falsch? Geleistete Anzahlungen werden auf einem aktiven Bestandskonto erfasst.", "options": ["Richtig", "Falsch"], "answer": 0, "explanation": "Richtig. Geleistete Anzahlungen sind aktivisch zu erfassen und werden bei Lieferung ausgebucht.", "hint": "Geleistete Anzahlung = eigener Anspruch, also aktiv."}, {"id": "t7_031", "topic": "7. Buchungsprobleme im Anlagevermögen", "type": "single", "difficulty": "leicht", "prompt": "Richtig oder falsch? Bei späterer Lieferung werden die zuvor eingebuchten geleisteten Anzahlungen im Haben ausgebucht.", "options": ["Richtig", "Falsch"], "answer": 0, "explanation": "Richtig. Geleistete Anzahlungen sind aktivisch zu erfassen und werden bei Lieferung ausgebucht.", "hint": "Geleistete Anzahlung = eigener Anspruch, also aktiv."}, {"id": "t7_032", "topic": "7. Buchungsprobleme im Anlagevermögen", "type": "single", "difficulty": "leicht", "prompt": "Richtig oder falsch? Geleistete Anzahlungen werden buchhalterisch nicht erfasst.", "options": ["Richtig", "Falsch"], "answer": 1, "explanation": "Falsch. Geleistete Anzahlungen sind aktivisch zu erfassen und werden bei Lieferung ausgebucht.", "hint": "Geleistete Anzahlung = eigener Anspruch, also aktiv."}, {"id": "t7_033", "topic": "7. Buchungsprobleme im Anlagevermögen", "type": "single", "difficulty": "leicht", "prompt": "Richtig oder falsch? Geleistete Anzahlungen werden mit erhaltenen Anzahlungen verrechnet.", "options": ["Richtig", "Falsch"], "answer": 1, "explanation": "Falsch. Geleistete Anzahlungen sind aktivisch zu erfassen und werden bei Lieferung ausgebucht.", "hint": "Geleistete Anzahlung = eigener Anspruch, also aktiv."}, {"id": "t7_034", "topic": "7. Buchungsprobleme im Anlagevermögen", "type": "single", "difficulty": "leicht", "prompt": "Welche zwei Interpretationen können bei Abschreibungen unterschieden werden?", "options": ["statische vs. dynamische", "korrektive vs. exponentielle", "dynamische vs. exponentielle", "lineare vs. geometrisch-degressive"], "answer": 0, "explanation": "In den Unterlagen wird zwischen statischer und dynamischer Interpretation unterschieden.", "hint": "Die richtige Antwort enthält keine Rechenmethode wie linear/degressiv."}, {"id": "t7_035", "topic": "7. Buchungsprobleme im Anlagevermögen", "type": "tf", "difficulty": "mittel", "prompt": "Bewerte die Aussagen zur planmäßigen Abschreibung.", "statements": [["Es muss auch dann planmäßig abgeschrieben werden, wenn der beizulegende Wert des Anlagevermögens im betreffenden Geschäftsjahr gestiegen oder konstant geblieben ist.", true], ["Planmäßige Abschreibungen erfolgen stets nur für das erste Geschäftsjahr.", false]], "explanation": "Planmäßige Abschreibungen erfolgen über die Nutzungsdauer hinweg unabhängig davon, ob der beizulegende Wert in einem Jahr konstant geblieben oder gestiegen ist.", "hint": "Planmäßig bedeutet systematisch über die Nutzungsdauer."}, {"id": "t7_036", "topic": "7. Buchungsprobleme im Anlagevermögen", "type": "single", "difficulty": "mittel", "prompt": "Richtig oder falsch? Planmäßige Abschreibung erfolgt auch dann, wenn der beizulegende Wert im Geschäftsjahr konstant geblieben oder gestiegen ist.", "options": ["Richtig", "Falsch"], "answer": 0, "explanation": "Richtig. Planmäßige Abschreibungen verteilen die Anschaffungs-/Herstellungskosten systematisch über die Nutzungsdauer.", "hint": "Planmäßig = unabhängig von kurzfristiger Wertentwicklung."}, {"id": "t7_037", "topic": "7. Buchungsprobleme im Anlagevermögen", "type": "single", "difficulty": "leicht", "prompt": "Richtig oder falsch? Planmäßige Abschreibungen erfolgen stets nur für das erste Geschäftsjahr.", "options": ["Richtig", "Falsch"], "answer": 1, "explanation": "Falsch. Planmäßige Abschreibungen erfolgen über die Nutzungsdauer.", "hint": "Nicht nur im ersten Jahr."}, {"id": "t7_038", "topic": "7. Buchungsprobleme im Anlagevermögen", "type": "calc", "difficulty": "leicht", "prompt": "Lineare Abschreibung: Anschaffungskosten 100.000 €, Nutzungsdauer 10 Jahre. Jährliche Abschreibung?", "answer": 10000, "tolerance": 0.01, "steps": ["100.000 / 10 = 10.000"], "explanation": "Bei linearer Abschreibung wird jedes Jahr derselbe Betrag abgeschrieben.", "hint": "AK durch Nutzungsdauer teilen."}, {"id": "t7_039", "topic": "7. Buchungsprobleme im Anlagevermögen", "type": "calc", "difficulty": "mittel", "prompt": "Lineare Abschreibung: Anschaffungskosten 80.000 €, Nutzungsdauer 8 Jahre. Buchwert nach 3 Jahren?", "answer": 50000, "tolerance": 0.01, "steps": ["Jährliche Abschreibung = 80.000 / 8 = 10.000", "Abschreibung nach 3 Jahren = 30.000", "Buchwert = 80.000 − 30.000 = 50.000"], "explanation": "Buchwert = Anschaffungskosten minus kumulierte Abschreibungen.", "hint": "Erst jährliche AfA berechnen, dann 3 Jahre abziehen."}, {"id": "t7_040", "topic": "7. Buchungsprobleme im Anlagevermögen", "type": "calc", "difficulty": "mittel", "prompt": "Lineare Abschreibung: Anschaffungskosten 120.000 €, Nutzungsdauer 6 Jahre. Buchwert nach 2 Jahren?", "answer": 80000, "tolerance": 0.01, "steps": ["Jährliche Abschreibung = 120.000 / 6 = 20.000", "Nach 2 Jahren: 40.000 abgeschrieben", "Buchwert = 120.000 − 40.000 = 80.000"], "explanation": "Der Buchwert sinkt jährlich um den planmäßigen Abschreibungsbetrag.", "hint": "AK − kumulierte AfA."}, {"id": "t8_001", "topic": "8. Buchungsprobleme mit zeitlicher Abgrenzung", "type": "single", "difficulty": "leicht", "prompt": "Welchen Zweck haben Rückstellungen?", "options": ["Sie dienen der periodengerechten Erfolgsermittlung, indem Ausgaben erfasst werden, die erst in zukünftigen Perioden zu Aufwendungen führen.", "Sie dienen der periodengerechten Erfolgsermittlung, indem Aufwendungen erfasst werden, die erst in zukünftigen Perioden zu Ausgaben führen.", "Sie dienen ausschließlich der Liquiditätsplanung.", "Sie dienen der Bildung stiller Reserven für zukünftige Perioden."], "answer": 1, "explanation": "Rückstellungen erfassen Aufwendungen periodengerecht bereits in der verursachenden Periode, obwohl die Ausgabe/Zahlung erst später erfolgt.", "hint": "Aufwand jetzt, Zahlung später."}, {"id": "t8_002", "topic": "8. Buchungsprobleme mit zeitlicher Abgrenzung", "type": "tf", "difficulty": "mittel", "prompt": "Bewerte die Aussagen zur Definition von Rückstellungen.", "statements": [["Rückstellungen werden gebildet, wenn eine Verpflichtung dem Grunde nach ungewiss, der Höhe nach aber sicher ist.", false], ["Rückstellungen werden gebildet, wenn eine Verpflichtung dem Grunde nach sicher, der Höhe nach aber ungewiss ist.", false], ["Rückstellungen werden gebildet, wenn eine Verpflichtung dem Grunde und/oder der Höhe nach ungewiss ist.", true]], "explanation": "Rückstellungen betreffen Verpflichtungen, die dem Grunde und/oder der Höhe nach ungewiss sind.", "hint": "Bei Rückstellungen ist mindestens ein Punkt unsicher: Grund oder Höhe."}, {"id": "t8_003", "topic": "8. Buchungsprobleme mit zeitlicher Abgrenzung", "type": "single", "difficulty": "leicht", "prompt": "Mit welchem Wertmaßstab werden Rückstellungen bewertet?", "options": ["Anhand des Erfüllungsbetrags", "Anhand des nach kaufmännischer Beurteilung geschätzten notwendigen Erfüllungsbetrags", "Anhand der Anschaffungskosten", "Anhand der Herstellungskosten", "Anhand des beizulegenden Zeitwerts"], "answer": 1, "explanation": "Rückstellungen werden mit dem nach vernünftiger kaufmännischer Beurteilung notwendigen Erfüllungsbetrag bewertet.", "hint": "Es geht um eine Schätzung nach kaufmännischer Beurteilung."}, {"id": "t8_004", "topic": "8. Buchungsprobleme mit zeitlicher Abgrenzung", "type": "multi", "difficulty": "mittel", "prompt": "Welche Rückstellungsarten gibt es?", "options": ["Rückstellungen für drohende Verluste aus schwebenden Geschäften", "Rückstellungen für im Geschäftsjahr unterlassene Aufwandsbildungen zur Bildung von Reserven für künftige Perioden", "Rückstellungen für im Geschäftsjahr unterlassene Abraumbeseitigung, die im folgenden Geschäftsjahr nachgeholt wird", "Rückstellungen für ungewisse Verbindlichkeiten", "Rückstellungen für Gewährleistungen, die ohne rechtliche Verpflichtung erbracht werden", "Rückstellungen für unterlassene Instandhaltung mit Nachholung im folgenden Geschäftsjahr innerhalb der ersten drei Monate"], "answer": [0, 2, 3, 4, 5], "explanation": "Keine Rückstellung darf zur Bildung von Reserven für künftige Perioden genutzt werden. Die anderen genannten Arten sind typische Rückstellungsarten.", "hint": "Rückstellungen sind keine frei wählbaren Reserven."}, {"id": "t8_005", "topic": "8. Buchungsprobleme mit zeitlicher Abgrenzung", "type": "multi", "difficulty": "mittel", "prompt": "Welche Rückstellungsarten sieht das Bilanzgliederungsschema des § 266 HGB vor?", "options": ["Kapitalrückstellungen", "Umsatzrückstellungen", "Steuerrückstellungen", "Sonstige Rückstellungen", "Rückstellungen für Pensionen und ähnliche Verpflichtungen"], "answer": [2, 3, 4], "explanation": "§ 266 HGB nennt u. a. Rückstellungen für Pensionen und ähnliche Verpflichtungen, Steuerrückstellungen und sonstige Rückstellungen.", "hint": "Kapitalrücklage ist Eigenkapital, keine Rückstellung."}, {"id": "t8_006", "topic": "8. Buchungsprobleme mit zeitlicher Abgrenzung", "type": "match", "difficulty": "mittel", "prompt": "Ordne zu: Verbrauch oder Auflösung von Rückstellungen?", "pairs": [["Grund für das Bestehen der Rückstellung ist entfallen", "Auflösung"], ["Tatsächlicher Eintritt des Grundes der gebildeten Rückstellung", "Verbrauch"]], "explanation": "Wird der Grund tatsächlich realisiert, wird die Rückstellung verbraucht. Entfällt der Grund, wird sie aufgelöst.", "hint": "Tritt der Fall ein = Verbrauch. Fällt der Grund weg = Auflösung."}, {"id": "t8_007", "topic": "8. Buchungsprobleme mit zeitlicher Abgrenzung", "type": "single", "difficulty": "mittel", "prompt": "Eine Rückstellung wurde in x1 mit 12.000 € gebildet. In x2 beträgt der tatsächliche Anspruch nur 10.000 €. Was liegt vor?", "options": ["Zutreffende Dotierung", "Überdotierung der Rückstellung", "Unterdotierung der Rückstellung", "Keine Rückstellung"], "answer": 1, "explanation": "Die Rückstellung war zu hoch dotiert: 12.000 € geschätzt, tatsächlich nur 10.000 €.", "hint": "Geschätzt größer als tatsächlich."}, {"id": "t8_008", "topic": "8. Buchungsprobleme mit zeitlicher Abgrenzung", "type": "single", "difficulty": "mittel", "prompt": "Eine Rückstellung wurde in x1 mit 12.000 € gebildet. In x2 beträgt der tatsächliche Anspruch 15.000 €. Was liegt vor?", "options": ["Zutreffende Dotierung", "Überdotierung der Rückstellung", "Unterdotierung der Rückstellung", "Auflösung ohne Verbrauch"], "answer": 2, "explanation": "Die Rückstellung war zu niedrig dotiert: 12.000 € geschätzt, tatsächlich 15.000 €.", "hint": "Geschätzt kleiner als tatsächlich."}, {"id": "t8_009", "topic": "8. Buchungsprobleme mit zeitlicher Abgrenzung", "type": "single", "difficulty": "mittel", "prompt": "Eine Rückstellung wurde in x1 mit 12.000 € gebildet. In x2 beträgt der tatsächliche Anspruch 12.000 €. Was liegt vor?", "options": ["Zutreffende Dotierung der Rückstellung", "Überdotierung der Rückstellung", "Unterdotierung der Rückstellung", "Ertragsabgrenzung"], "answer": 0, "explanation": "Schätzung und tatsächlicher Betrag stimmen überein.", "hint": "12.000 = 12.000."}, {"id": "t8_010", "topic": "8. Buchungsprobleme mit zeitlicher Abgrenzung", "type": "fill", "difficulty": "mittel", "prompt": "Bilde den Buchungssatz zur Bildung einer Rückstellung für unterlassene Abraumbeseitigung über 50.000 €: ____ an ____", "answers": ["Abraumbeseitigungsaufwand an Rückstellungen für unterlassene Abraumbeseitigungen", "Abraumbeseitigungsaufwand an Rückstellungen für unterlassene Abraumbeseitigung", "Abraumbeseitigungsaufwand an Rückstellungen"], "explanation": "Bei Bildung der Rückstellung wird Aufwand im Soll und die Rückstellung im Haben gebucht.", "hint": "Aufwand jetzt, Verpflichtung später."}, {"id": "t8_011", "topic": "8. Buchungsprobleme mit zeitlicher Abgrenzung", "type": "calc", "difficulty": "leicht", "prompt": "Für unterlassene Abraumbeseitigung werden voraussichtliche Ausgaben von 50.000 € erwartet. In welcher Höhe ist die Rückstellung zu bilden?", "answer": 50000, "tolerance": 0.01, "steps": ["Die Rückstellung wird in Höhe des geschätzten notwendigen Erfüllungsbetrags gebildet: 50.000 €."], "explanation": "Rückstellungen werden mit dem geschätzten notwendigen Erfüllungsbetrag angesetzt.", "hint": "Hier ist der geschätzte Betrag direkt gegeben."}, {"id": "t8_012", "topic": "8. Buchungsprobleme mit zeitlicher Abgrenzung", "type": "calc", "difficulty": "mittel", "prompt": "Drohverlustfall: Verkaufspreis 100.000 €, erwartete Herstellungskosten 120.000 €. Wie hoch ist der drohende Verlust in x1?", "answer": 20000, "tolerance": 0.01, "steps": ["120.000 − 100.000 = 20.000"], "explanation": "Bei einem drohenden Verlust aus einem schwebenden Geschäft wird eine Drohverlustrückstellung in Höhe des erwarteten Verlusts gebildet.", "hint": "Kosten minus Verkaufspreis."}, {"id": "t8_013", "topic": "8. Buchungsprobleme mit zeitlicher Abgrenzung", "type": "match", "difficulty": "mittel", "prompt": "Drohverlustrückstellung im Geschäftsjahr x1: Ordne die Konten der richtigen Seite zu.", "pairs": [["Sonstige betriebliche Aufwendungen", "Soll"], ["Drohverlustrückstellung", "Haben"], ["Bank", "nicht notwendig"], ["Sonstiger betrieblicher Ertrag", "nicht notwendig"]], "explanation": "In x1 wird die Drohverlustrückstellung gebildet: Aufwand an Rückstellung. Bank und Ertrag werden noch nicht benötigt.", "hint": "In x1 wird nur die Rückstellung gebildet."}, {"id": "t8_014", "topic": "8. Buchungsprobleme mit zeitlicher Abgrenzung", "type": "match", "difficulty": "mittel", "prompt": "Drohverlustrückstellung im Geschäftsjahr x2: Tatsächliche Herstellungskosten 105.000 €, Rückstellung aus x1 20.000 €. Ordne bezogen auf die Rückstellung zu.", "pairs": [["Drohverlustrückstellung", "Soll"], ["Sonstiger betrieblicher Ertrag", "Haben"], ["Bank", "nicht notwendig"], ["Sonstige betriebliche Aufwendungen", "nicht notwendig"]], "explanation": "Die Rückstellung wird im Soll ausgebucht. Da sie höher war als der tatsächliche Verlust, entsteht ein sonstiger betrieblicher Ertrag.", "hint": "Rückstellung zu hoch → Ertrag bei Auflösung."}, {"id": "t8_015", "topic": "8. Buchungsprobleme mit zeitlicher Abgrenzung", "type": "calc", "difficulty": "mittel", "prompt": "Drohverlustfall: Rückstellung 20.000 €, tatsächlicher Verlust später nur 5.000 €. Wie hoch ist der Ertrag aus Überdotierung?", "answer": 15000, "tolerance": 0.01, "steps": ["20.000 − 5.000 = 15.000"], "explanation": "Die zu viel gebildete Rückstellung wird ertragswirksam aufgelöst.", "hint": "Rückstellung minus tatsächlicher Verlust."}, {"id": "t8_016", "topic": "8. Buchungsprobleme mit zeitlicher Abgrenzung", "type": "single", "difficulty": "leicht", "prompt": "Was ist die Aufgabe von Rechnungsabgrenzungsposten?", "options": ["Erfolgswirkung und Zahlungsvorgang sind in Einklang zu bringen", "Trennung von Erfolgswirkung und Zahlungsvorgang", "Vermeidung jeder Zahlung im alten Jahr", "Bildung stiller Reserven"], "answer": 1, "explanation": "RAP dienen dazu, Erfolgswirkung und Zahlungsvorgang periodengerecht zu trennen.", "hint": "Zahlung und Aufwand/Ertrag fallen zeitlich auseinander."}, {"id": "t8_017", "topic": "8. Buchungsprobleme mit zeitlicher Abgrenzung", "type": "multi", "difficulty": "leicht", "prompt": "Welche Arten von Rechnungsabgrenzungsposten gibt es?", "options": ["Lineare", "Transitorische", "Antizipative", "Retrospektive", "Degressive", "Progressive"], "answer": [1, 2], "explanation": "Es gibt transitorische und antizipative Rechnungsabgrenzungsposten.", "hint": "Zwei Begriffe: transitorisch und antizipativ."}, {"id": "t8_018", "topic": "8. Buchungsprobleme mit zeitlicher Abgrenzung", "type": "match", "difficulty": "mittel", "prompt": "Ordne die Konstellationen den richtigen Abgrenzungsposten zu.", "pairs": [["Ausgabe vor Aufwand", "Aktiver RAP"], ["Einnahme vor Ertrag", "Passiver RAP"], ["Aufwand vor Auszahlung", "Sonstige Verbindlichkeit"], ["Ertrag vor Einzahlung", "Sonstige Forderung bzw. VGG"]], "explanation": "Transitorisch: Zahlung vor Erfolg → ARAP/PRAP. Antizipativ: Erfolg vor Zahlung → sonstige Forderung/sonstige Verbindlichkeit.", "hint": "Zuerst fragen: Zahlung zuerst oder Erfolg zuerst?"}, {"id": "t8_019", "topic": "8. Buchungsprobleme mit zeitlicher Abgrenzung", "type": "single", "difficulty": "mittel", "prompt": "Ausgabe vor Aufwand führt zu ...", "options": ["Aktiver RAP", "Passiver RAP", "Sonstige Forderung", "Sonstige Verbindlichkeit"], "answer": 0, "explanation": "Wenn eine Ausgabe bereits erfolgt, der Aufwand aber erst später entsteht, liegt ein aktiver Rechnungsabgrenzungsposten vor.", "hint": "Du zahlst vorab für späteren Aufwand."}, {"id": "t8_020", "topic": "8. Buchungsprobleme mit zeitlicher Abgrenzung", "type": "single", "difficulty": "mittel", "prompt": "Einnahme vor Ertrag führt zu ...", "options": ["Aktiver RAP", "Passiver RAP", "Sonstige Forderung", "Sonstige Verbindlichkeit"], "answer": 1, "explanation": "Wenn Geld bereits eingeht, der Ertrag aber erst später entsteht, liegt ein passiver Rechnungsabgrenzungsposten vor.", "hint": "Du bekommst Geld vorab für spätere Leistung."}, {"id": "t8_021", "topic": "8. Buchungsprobleme mit zeitlicher Abgrenzung", "type": "single", "difficulty": "mittel", "prompt": "Aufwand vor Auszahlung führt zu ...", "options": ["Aktiver RAP", "Passiver RAP", "Sonstige Forderung", "Sonstige Verbindlichkeit"], "answer": 3, "explanation": "Der Aufwand gehört ins alte Jahr, die Zahlung erfolgt später. Daher entsteht eine sonstige Verbindlichkeit.", "hint": "Du schuldest noch Geld."}, {"id": "t8_022", "topic": "8. Buchungsprobleme mit zeitlicher Abgrenzung", "type": "single", "difficulty": "mittel", "prompt": "Ertrag vor Einzahlung führt zu ...", "options": ["Aktiver RAP", "Passiver RAP", "Sonstige Forderung", "Sonstige Verbindlichkeit"], "answer": 2, "explanation": "Der Ertrag gehört ins alte Jahr, die Zahlung erfolgt später. Daher entsteht eine sonstige Forderung.", "hint": "Du bekommst noch Geld."}, {"id": "t8_023", "topic": "8. Buchungsprobleme mit zeitlicher Abgrenzung", "type": "calc", "difficulty": "mittel", "prompt": "Zinseinnahmen aus Darlehen: jährlich 24.000 €, vorschüssige Zahlung am 01.10.x1 für ein Jahr. Wie viel entfällt auf x1?", "answer": 6000, "tolerance": 0.01, "steps": ["24.000 € / 12 Monate = 2.000 € pro Monat", "x1 betrifft Oktober, November, Dezember = 3 Monate", "3 × 2.000 = 6.000 €"], "explanation": "Nur 3 Monate gehören in x1 als Zinsertrag.", "hint": "Oktober bis Dezember = 3 Monate."}, {"id": "t8_024", "topic": "8. Buchungsprobleme mit zeitlicher Abgrenzung", "type": "calc", "difficulty": "mittel", "prompt": "Zinseinnahmen aus Darlehen: jährlich 24.000 €, vorschüssig am 01.10.x1 gezahlt. Wie hoch ist der PRAP am 31.12.x1?", "answer": 18000, "tolerance": 0.01, "steps": ["24.000 € / 12 = 2.000 € pro Monat", "Folgejahr x2 betrifft 9 Monate", "9 × 2.000 = 18.000 €"], "explanation": "Der Anteil für x2 ist noch kein Ertrag in x1 und wird passiv abgegrenzt.", "hint": "Januar bis September des Folgejahres = 9 Monate."}, {"id": "t8_025", "topic": "8. Buchungsprobleme mit zeitlicher Abgrenzung", "type": "fill", "difficulty": "mittel", "prompt": "Buchung bei Zahlung der vorschüssigen Zinsen am 01.10.x1: ____ an ____", "answers": ["Bank an Zinserträge", "Bank an Zinsertraege"], "explanation": "Zunächst geht der gesamte Betrag auf dem Bankkonto ein und wird als Zinsertrag gebucht.", "hint": "Geldeingang im Soll bei Bank."}, {"id": "t8_026", "topic": "8. Buchungsprobleme mit zeitlicher Abgrenzung", "type": "fill", "difficulty": "mittel", "prompt": "Jahresabschlussbuchung für den PRAP bei vorschüssigen Zinsen: ____ an ____", "answers": ["Zinserträge an PRAP", "Zinsertraege an PRAP"], "explanation": "Der noch nicht in x1 verdiente Ertrag wird aus den Zinserträgen herausgenommen und als PRAP passiv abgegrenzt.", "hint": "Ertrag vermindern, PRAP bilden."}, {"id": "t8_027", "topic": "8. Buchungsprobleme mit zeitlicher Abgrenzung", "type": "multi", "difficulty": "mittel", "prompt": "Welche Möglichkeiten sieht § 250 Abs. 3 HGB für die Behandlung eines Disagios vor?", "options": ["Passivierung als PRAP und planmäßige Auflösung über die Laufzeit", "Aktivierung als ARAP und planmäßige Abschreibung über die Laufzeit", "Sofortige Ertragsverrechnung", "Sofortige Aufwandsverrechnung"], "answer": [1, 3], "explanation": "Beim Disagio besteht ein Wahlrecht: Aktivierung als ARAP mit planmäßiger Verteilung oder sofortige Aufwandsverrechnung.", "hint": "Disagio ist Aufwand, nicht Ertrag."}, {"id": "t8_028", "topic": "8. Buchungsprobleme mit zeitlicher Abgrenzung", "type": "single", "difficulty": "mittel", "prompt": "Ein Disagio kann bilanziell aktiviert werden als ...", "options": ["PRAP", "ARAP", "Umsatzerlös", "Eigenkapital"], "answer": 1, "explanation": "Ein Disagio kann als aktiver Rechnungsabgrenzungsposten aktiviert und über die Laufzeit verteilt werden.", "hint": "Disagio = Aufwand vor späterer Erfolgswirkung."}, {"id": "t8_029", "topic": "8. Buchungsprobleme mit zeitlicher Abgrenzung", "type": "single", "difficulty": "mittel", "prompt": "Welche Aussage zum Disagio ist richtig?", "options": ["Disagio ist immer sofort als Ertrag zu erfassen.", "Disagio darf als PRAP passiviert werden.", "Disagio kann sofort als Aufwand verrechnet werden.", "Disagio erhöht den Zinsertrag."], "answer": 2, "explanation": "Neben der Aktivierung als ARAP ist auch die sofortige Aufwandsverrechnung möglich.", "hint": "Es handelt sich um Aufwand."}, {"id": "t8_030", "topic": "8. Buchungsprobleme mit zeitlicher Abgrenzung", "type": "single", "difficulty": "leicht", "prompt": "Barverkauf eines LKW mit Buchwert 50.000 € zu 50.000 € netto. Wie ist der Verkauf einzuordnen?", "options": ["Verkauf zum Buchwert", "Verkauf über Buchwert", "Verkauf unter Buchwert"], "answer": 0, "explanation": "Verkaufspreis und Buchwert sind gleich.", "hint": "50.000 = 50.000."}, {"id": "t8_031", "topic": "8. Buchungsprobleme mit zeitlicher Abgrenzung", "type": "single", "difficulty": "leicht", "prompt": "Barverkauf eines LKW mit Buchwert 60.000 € zu 50.000 € netto. Wie ist der Verkauf einzuordnen?", "options": ["Verkauf zum Buchwert", "Verkauf über Buchwert", "Verkauf unter Buchwert"], "answer": 2, "explanation": "Der Verkaufspreis liegt unter dem Buchwert.", "hint": "50.000 < 60.000."}, {"id": "t8_032", "topic": "8. Buchungsprobleme mit zeitlicher Abgrenzung", "type": "single", "difficulty": "leicht", "prompt": "Barverkauf eines LKW mit Buchwert 50.000 € zu 60.000 € netto. Wie ist der Verkauf einzuordnen?", "options": ["Verkauf zum Buchwert", "Verkauf über Buchwert", "Verkauf unter Buchwert"], "answer": 1, "explanation": "Der Verkaufspreis liegt über dem Buchwert.", "hint": "60.000 > 50.000."}, {"id": "t8_033", "topic": "8. Buchungsprobleme mit zeitlicher Abgrenzung", "type": "multi", "difficulty": "mittel", "prompt": "Welche Aussagen zu Zuschreibungen sind richtig?", "options": ["Sofern der Grund für die außerplanmäßige Abschreibung später ganz oder teilweise entfällt, besteht ein Zuschreibungsgebot.", "Nur Geschäfts- oder Firmenwerte dürfen zugeschrieben werden.", "Zuschreibungen dürfen maximal bis zu den fortgeführten Anschaffungs- oder Herstellungskosten erfolgen."], "answer": [0, 2], "explanation": "Fällt der Grund einer außerplanmäßigen Abschreibung weg, besteht grundsätzlich Zuschreibungsgebot. Die Zuschreibung ist auf fortgeführte AK/HK begrenzt.", "hint": "Nicht über fortgeführte AK/HK hinaus."}, {"id": "t8_034", "topic": "8. Buchungsprobleme mit zeitlicher Abgrenzung", "type": "tf", "difficulty": "mittel", "prompt": "Bewerte die Aussagen zu außerplanmäßigen Abschreibungen.", "statements": [["Wenn die Wertminderung voraussichtlich dauerhaft ist, besteht ein Abschreibungswahlrecht auf den niedrigeren beizulegenden Zeitwert.", false], ["Wenn die Wertminderung voraussichtlich dauerhaft ist, besteht ein Abschreibungsgebot auf den niedrigeren beizulegenden Zeitwert.", true], ["Wenn die Wertminderung voraussichtlich nicht dauerhaft ist und es sich um Finanzanlagen handelt, besteht ein Abschreibungsgebot auf den niedrigeren beizulegenden Zeitwert.", false], ["Wenn die Wertminderung voraussichtlich nicht dauerhaft ist und es sich um Finanzanlagen handelt, besteht ein Abschreibungswahlrecht auf den niedrigeren beizulegenden Zeitwert.", true]], "explanation": "Bei dauerhafter Wertminderung besteht Abschreibungsgebot. Bei nicht dauerhafter Wertminderung von Finanzanlagen besteht ein Wahlrecht.", "hint": "Dauerhaft = Gebot. Nicht dauerhaft bei Finanzanlagen = Wahlrecht."}, {"id": "t8_035", "topic": "8. Buchungsprobleme mit zeitlicher Abgrenzung", "type": "single", "difficulty": "mittel", "prompt": "Eine dauerhafte Wertminderung im Anlagevermögen führt zu ...", "options": ["Abschreibungsverbot", "Abschreibungswahlrecht", "Abschreibungsgebot", "Zuschreibungsverbot"], "answer": 2, "explanation": "Bei dauerhafter Wertminderung ist außerplanmäßig abzuschreiben.", "hint": "Dauerhaft = verpflichtend."}, {"id": "t9_001", "topic": "9. Verbuchung von Löhnen und Gehältern", "type": "single", "difficulty": "leicht", "prompt": "Aus welchen beiden Bestandteilen besteht der betriebliche Personalaufwand?", "options": ["Lohn- und Gehaltsaufwand + Sozialaufwand", "Lohn- und Gehaltsaufwand + sonstige betriebliche Aufwendungen", "Sozialaufwand + sonstige betriebliche Aufwendungen"], "answer": 0, "explanation": "Der betriebliche Personalaufwand besteht aus Lohn- und Gehaltsaufwand sowie Sozialaufwand.", "hint": "Personalaufwand besteht aus direkter Vergütung plus soziale Aufwendungen."}, {"id": "t9_002", "topic": "9. Verbuchung von Löhnen und Gehältern", "type": "multi", "difficulty": "leicht", "prompt": "Welche Bestandteile beinhaltet der Lohn- und Gehaltsaufwand?", "options": ["Geldbezüge", "Tarifvertragliche und freiwillige Sozialleistungen", "Arbeitgeberanteil zur Sozialversicherung", "Sachbezüge bzw. geldwerte Vorteile"], "answer": [0, 3], "explanation": "Lohn- und Gehaltsaufwand umfasst Geldbezüge sowie Sachbezüge/geldwerte Vorteile.", "hint": "Was erhält der Arbeitnehmer direkt?"}, {"id": "t9_003", "topic": "9. Verbuchung von Löhnen und Gehältern", "type": "multi", "difficulty": "leicht", "prompt": "Welche Bestandteile beinhaltet der Sozialaufwand?", "options": ["Sachbezüge bzw. geldwerte Vorteile", "Tarifvertragliche und freiwillige Sozialleistungen", "Geldbezüge", "Arbeitgeberanteil zur Sozialversicherung"], "answer": [1, 3], "explanation": "Sozialaufwand umfasst tarifvertragliche/freiwillige Sozialleistungen sowie den Arbeitgeberanteil zur Sozialversicherung.", "hint": "Sozialaufwand = soziale Leistungen + AG-Anteile."}, {"id": "t9_004", "topic": "9. Verbuchung von Löhnen und Gehältern", "type": "match", "difficulty": "mittel", "prompt": "Ordne die Bestandteile richtig zu.", "pairs": [["Geldbezüge", "Lohn- und Gehaltsaufwand"], ["Sachbezüge bzw. geldwerte Vorteile", "Lohn- und Gehaltsaufwand"], ["Tarifvertragliche und freiwillige Sozialleistungen", "Sozialaufwand"], ["Arbeitgeberanteil zur Sozialversicherung", "Sozialaufwand"]], "explanation": "Direkte Bezüge gehören zum Lohn- und Gehaltsaufwand. Arbeitgeberanteile und Sozialleistungen gehören zum Sozialaufwand.", "hint": "Direkt für Arbeitnehmer = Lohn/Gehalt; Arbeitgeberanteile = Sozialaufwand."}, {"id": "t9_005", "topic": "9. Verbuchung von Löhnen und Gehältern", "type": "multi", "difficulty": "leicht", "prompt": "Aus welchen Komponenten setzt sich die gesetzliche Sozialversicherung zusammen?", "options": ["Pflegeversicherung (PV)", "Haftpflichtversicherung (HV)", "Unfallversicherung (UV)", "Arbeitslosenversicherung (ALV)", "Rentenversicherung (RV)", "Krankenversicherung (KV)"], "answer": [0, 2, 3, 4, 5], "explanation": "Zur gesetzlichen Sozialversicherung gehören KV, PV, RV, ALV und UV. Die Haftpflichtversicherung gehört nicht dazu.", "hint": "Die fünf klassischen Sozialversicherungen merken: KV, PV, RV, ALV, UV."}, {"id": "t9_006", "topic": "9. Verbuchung von Löhnen und Gehältern", "type": "match", "difficulty": "mittel", "prompt": "Ordne die Finanzierung der Sozialversicherungen zu.", "pairs": [["Krankenversicherung (KV)", "Arbeitnehmer und Arbeitgeber"], ["Pflegeversicherung (PV)", "Arbeitnehmer und Arbeitgeber"], ["Rentenversicherung (RV)", "Arbeitnehmer und Arbeitgeber"], ["Arbeitslosenversicherung (ALV)", "Arbeitnehmer und Arbeitgeber"], ["Unfallversicherung (UV)", "nur Arbeitgeber"]], "explanation": "KV, PV, RV und ALV werden grundsätzlich von Arbeitnehmer und Arbeitgeber getragen. Die Unfallversicherung trägt nur der Arbeitgeber.", "hint": "UV ist die Ausnahme: nur Arbeitgeber."}, {"id": "t9_007", "topic": "9. Verbuchung von Löhnen und Gehältern", "type": "single", "difficulty": "leicht", "prompt": "Wer finanziert die Krankenversicherung (KV)?", "options": ["nur Arbeitnehmer", "nur Arbeitgeber", "Arbeitnehmer und Arbeitgeber"], "answer": 2, "explanation": "Krankenversicherung (KV) wird finanziert durch: Arbeitnehmer und Arbeitgeber.", "hint": "Bei der Unfallversicherung zahlt nur der Arbeitgeber."}, {"id": "t9_008", "topic": "9. Verbuchung von Löhnen und Gehältern", "type": "single", "difficulty": "leicht", "prompt": "Wer finanziert die Pflegeversicherung (PV)?", "options": ["nur Arbeitnehmer", "nur Arbeitgeber", "Arbeitnehmer und Arbeitgeber"], "answer": 2, "explanation": "Pflegeversicherung (PV) wird finanziert durch: Arbeitnehmer und Arbeitgeber.", "hint": "Bei der Unfallversicherung zahlt nur der Arbeitgeber."}, {"id": "t9_009", "topic": "9. Verbuchung von Löhnen und Gehältern", "type": "single", "difficulty": "leicht", "prompt": "Wer finanziert die Rentenversicherung (RV)?", "options": ["nur Arbeitnehmer", "nur Arbeitgeber", "Arbeitnehmer und Arbeitgeber"], "answer": 2, "explanation": "Rentenversicherung (RV) wird finanziert durch: Arbeitnehmer und Arbeitgeber.", "hint": "Bei der Unfallversicherung zahlt nur der Arbeitgeber."}, {"id": "t9_010", "topic": "9. Verbuchung von Löhnen und Gehältern", "type": "single", "difficulty": "leicht", "prompt": "Wer finanziert die Arbeitslosenversicherung (ALV)?", "options": ["nur Arbeitnehmer", "nur Arbeitgeber", "Arbeitnehmer und Arbeitgeber"], "answer": 2, "explanation": "Arbeitslosenversicherung (ALV) wird finanziert durch: Arbeitnehmer und Arbeitgeber.", "hint": "Bei der Unfallversicherung zahlt nur der Arbeitgeber."}, {"id": "t9_011", "topic": "9. Verbuchung von Löhnen und Gehältern", "type": "single", "difficulty": "leicht", "prompt": "Wer finanziert die Unfallversicherung (UV)?", "options": ["nur Arbeitnehmer", "nur Arbeitgeber", "Arbeitnehmer und Arbeitgeber"], "answer": 1, "explanation": "Unfallversicherung (UV) wird finanziert durch: nur Arbeitgeber.", "hint": "Bei der Unfallversicherung zahlt nur der Arbeitgeber."}, {"id": "t9_012", "topic": "9. Verbuchung von Löhnen und Gehältern", "type": "match", "difficulty": "mittel", "prompt": "Verbuchung von Lohn und Gehalt: Ordne Soll/Haben zu.", "pairs": [["Lohn- und Gehaltsaufwand", "Soll"], ["Noch abzuführende Leistungen", "Haben"], ["Bank", "Haben"]], "explanation": "Lohn- und Gehaltsaufwand steht im Soll. Verbindlichkeiten und Bankabfluss stehen im Haben.", "hint": "Aufwand immer Soll."}, {"id": "t9_013", "topic": "9. Verbuchung von Löhnen und Gehältern", "type": "fill", "difficulty": "mittel", "prompt": "Typischer Buchungssatz für Lohn/Gehalt: ____ an ____ und ____", "answers": ["Lohn- und Gehaltsaufwand an Noch abzuführende Leistungen und Bank", "Lohn und Gehaltsaufwand an Noch abzuführende Leistungen und Bank", "Lohn- und Gehaltsaufwand an Bank und Noch abzuführende Leistungen"], "explanation": "Der Bruttolohn wird als Aufwand gebucht. Ausgezahlt wird der Nettolohn über Bank; Abzüge werden als noch abzuführende Leistungen passiviert.", "hint": "Soll: Aufwand. Haben: Bank und Verbindlichkeiten."}, {"id": "t9_014", "topic": "9. Verbuchung von Löhnen und Gehältern", "type": "match", "difficulty": "mittel", "prompt": "Verbuchung des Sozialaufwands: Ordne Soll/Haben zu.", "pairs": [["Sozialaufwand", "Soll"], ["Noch abzuführende Leistungen", "Haben"]], "explanation": "Der Arbeitgeberanteil zur Sozialversicherung ist Sozialaufwand im Soll; die abzuführende Schuld steht im Haben.", "hint": "Aufwand im Soll, Verbindlichkeit im Haben."}, {"id": "t9_015", "topic": "9. Verbuchung von Löhnen und Gehältern", "type": "fill", "difficulty": "mittel", "prompt": "Buchungssatz für Arbeitgeberanteile zur Sozialversicherung: ____ an ____", "answers": ["Sozialaufwand an Noch abzuführende Leistungen", "Sozialaufwand an Noch abzufuehrende Leistungen"], "explanation": "Der Sozialaufwand wird im Soll gebucht, die Verbindlichkeit gegenüber den Trägern im Haben.", "hint": "AG-Anteil = Sozialaufwand."}, {"id": "t9_016", "topic": "9. Verbuchung von Löhnen und Gehältern", "type": "match", "difficulty": "mittel", "prompt": "Zahlung fälliger Sozialabgaben/Steuern/VL: Ordne Soll/Haben zu.", "pairs": [["Noch abzuführende Leistungen", "Soll"], ["Bank", "Haben"]], "explanation": "Bei Zahlung wird die Verbindlichkeit im Soll ausgebucht und die Bank im Haben gemindert.", "hint": "Verbindlichkeit sinkt → Soll."}, {"id": "t9_017", "topic": "9. Verbuchung von Löhnen und Gehältern", "type": "fill", "difficulty": "mittel", "prompt": "Buchungssatz bei Zahlung fälliger Sozialabgaben, Steuern und vermögenswirksamer Leistungen: ____ an ____", "answers": ["Noch abzuführende Leistungen an Bank", "Noch abzufuehrende Leistungen an Bank"], "explanation": "Die noch abzuführenden Leistungen werden bezahlt: Verbindlichkeit im Soll, Bank im Haben.", "hint": "Zahlung über Bank."}, {"id": "t9_018", "topic": "9. Verbuchung von Löhnen und Gehältern", "type": "match", "difficulty": "mittel", "prompt": "Verbuchung eines Vorschusses an Arbeitnehmer: Ordne Soll/Haben zu.", "pairs": [["Sonstige Forderungen", "Soll"], ["Bank", "Haben"]], "explanation": "Ein Vorschuss ist eine Forderung gegenüber dem Arbeitnehmer. Die Auszahlung mindert die Bank.", "hint": "Der Arbeitnehmer schuldet dem Unternehmen den Vorschuss."}, {"id": "t9_019", "topic": "9. Verbuchung von Löhnen und Gehältern", "type": "fill", "difficulty": "mittel", "prompt": "Buchungssatz für einen Vorschuss an Arbeitnehmer per Bank: ____ an ____", "answers": ["Sonstige Forderungen an Bank"], "explanation": "Der Vorschuss wird als sonstige Forderung aktiviert, Bank nimmt ab.", "hint": "Forderung im Soll, Bank im Haben."}, {"id": "t9_020", "topic": "9. Verbuchung von Löhnen und Gehältern", "type": "tf", "difficulty": "mittel", "prompt": "Bewerte die Aussagen zu Löhnen, Gehältern und Sozialversicherung.", "statements": [["Die Unfallversicherung wird ausschließlich vom Arbeitgeber finanziert.", true], ["Krankenversicherung, Pflegeversicherung, Rentenversicherung und Arbeitslosenversicherung werden grundsätzlich von Arbeitnehmer und Arbeitgeber finanziert.", true], ["Der Arbeitgeberanteil zur Sozialversicherung gehört zum Sozialaufwand.", true], ["Geldbezüge gehören zum Sozialaufwand.", false], ["Sachbezüge bzw. geldwerte Vorteile gehören zum Lohn- und Gehaltsaufwand.", true], ["Die Haftpflichtversicherung gehört zur gesetzlichen Sozialversicherung.", false]], "explanation": "UV zahlt nur der Arbeitgeber. Geld- und Sachbezüge gehören zum Lohn- und Gehaltsaufwand; AG-Anteile zum Sozialaufwand.", "hint": "UV ist die Sonderregel. Geld/Sachbezug = Lohn/Gehalt."}, {"id": "t9_021", "topic": "9. Verbuchung von Löhnen und Gehältern", "type": "calc", "difficulty": "leicht", "prompt": "Jahresbrutto 51.000 € wird auf 12 Monatsgehälter verteilt. Wie hoch ist das monatliche Bruttoarbeitsentgelt?", "answer": 4250.0, "tolerance": 0.01, "steps": ["51.000 / 12 = 4.250"], "explanation": "Das Monatsbrutto beträgt 4.250,00 €.", "hint": "Jahresbetrag durch 12 teilen."}, {"id": "t9_022", "topic": "9. Verbuchung von Löhnen und Gehältern", "type": "calc", "difficulty": "mittel", "prompt": "Monatsbrutto 4.250 €, Lohnsteuer 14,10 %. Wie hoch ist die monatliche Lohnsteuer?", "answer": 599.25, "tolerance": 0.01, "steps": ["4.250 × 14,10 % = 599,25"], "explanation": "Die Lohnsteuer beträgt 599,25 €.", "hint": "4.250 × 0,141."}, {"id": "t9_023", "topic": "9. Verbuchung von Löhnen und Gehältern", "type": "calc", "difficulty": "mittel", "prompt": "Lohnsteuer 599,25 €, Kirchensteuer 9 % der Lohnsteuer. Wie hoch ist die Kirchensteuer?", "answer": 53.93, "tolerance": 0.01, "steps": ["599,25 × 9 % = 53,9325", "Gerundet: 53,93"], "explanation": "Die Kirchensteuer beträgt 53,93 €.", "hint": "Kirchensteuer wird auf Basis der Lohnsteuer berechnet."}, {"id": "t9_024", "topic": "9. Verbuchung von Löhnen und Gehältern", "type": "calc", "difficulty": "mittel", "prompt": "Monatsbrutto 4.250 €, Krankenversicherung 14,6 %, hälftig durch Arbeitnehmer. Wie hoch ist der Arbeitnehmeranteil KV?", "answer": 310.25, "tolerance": 0.01, "steps": ["14,6 % / 2 = 7,3 %", "4.250 × 7,3 % = 310,25"], "explanation": "Der Arbeitnehmeranteil zur Krankenversicherung beträgt 310,25 €.", "hint": "Erst halbieren, dann berechnen."}, {"id": "t9_025", "topic": "9. Verbuchung von Löhnen und Gehältern", "type": "calc", "difficulty": "mittel", "prompt": "Monatsbrutto 4.250 €, KV-Zusatzbeitrag 2,9 %, hälftig durch Arbeitnehmer. Wie hoch ist der Arbeitnehmeranteil Zusatzbeitrag?", "answer": 61.63, "tolerance": 0.01, "steps": ["2,9 % / 2 = 1,45 %", "4.250 × 1,45 % = 61,625", "Gerundet: 61,63"], "explanation": "Der Arbeitnehmeranteil zum KV-Zusatzbeitrag beträgt 61,63 €.", "hint": "2,9 % halbieren."}, {"id": "t9_026", "topic": "9. Verbuchung von Löhnen und Gehältern", "type": "calc", "difficulty": "mittel", "prompt": "Monatsbrutto 4.250 €, Pflegeversicherung 3,4 %, hälftig durch Arbeitnehmer. Wie hoch ist der Arbeitnehmeranteil PV?", "answer": 72.25, "tolerance": 0.01, "steps": ["3,4 % / 2 = 1,7 %", "4.250 × 1,7 % = 72,25"], "explanation": "Der Arbeitnehmeranteil zur Pflegeversicherung beträgt 72,25 €.", "hint": "3,4 % halbieren."}, {"id": "t9_027", "topic": "9. Verbuchung von Löhnen und Gehältern", "type": "calc", "difficulty": "mittel", "prompt": "Monatsbrutto 4.250 €, Kinderlosenzuschlag PV 0,6 % wird nur vom Arbeitnehmer getragen. Wie hoch ist der Zuschlag?", "answer": 25.5, "tolerance": 0.01, "steps": ["4.250 × 0,6 % = 25,50"], "explanation": "Der Kinderlosenzuschlag wird nicht hälftig geteilt, sondern vom Arbeitnehmer getragen.", "hint": "Nicht halbieren."}, {"id": "t9_028", "topic": "9. Verbuchung von Löhnen und Gehältern", "type": "calc", "difficulty": "mittel", "prompt": "Monatsbrutto 4.250 €, zusätzlicher PV-Beitrag 2025: 0,2 %. Wie hoch ist der Betrag?", "answer": 8.5, "tolerance": 0.01, "steps": ["4.250 × 0,2 % = 8,50"], "explanation": "Der zusätzliche PV-Betrag beträgt 8,50 €.", "hint": "4.250 × 0,002."}, {"id": "t9_029", "topic": "9. Verbuchung von Löhnen und Gehältern", "type": "calc", "difficulty": "mittel", "prompt": "Monatsbrutto 4.250 €, Arbeitslosenversicherung 2,6 %, hälftig durch Arbeitnehmer. Wie hoch ist der Arbeitnehmeranteil ALV?", "answer": 55.25, "tolerance": 0.01, "steps": ["2,6 % / 2 = 1,3 %", "4.250 × 1,3 % = 55,25"], "explanation": "Der Arbeitnehmeranteil zur Arbeitslosenversicherung beträgt 55,25 €.", "hint": "2,6 % halbieren."}, {"id": "t9_030", "topic": "9. Verbuchung von Löhnen und Gehältern", "type": "calc", "difficulty": "mittel", "prompt": "Monatsbrutto 4.250 €, Rentenversicherung 18,6 %, hälftig durch Arbeitnehmer. Wie hoch ist der Arbeitnehmeranteil RV?", "answer": 395.25, "tolerance": 0.01, "steps": ["18,6 % / 2 = 9,3 %", "4.250 × 9,3 % = 395,25"], "explanation": "Der Arbeitnehmeranteil zur Rentenversicherung beträgt 395,25 €.", "hint": "18,6 % halbieren."}, {"id": "t9_031", "topic": "9. Verbuchung von Löhnen und Gehältern", "type": "calc", "difficulty": "schwer", "prompt": "Berechne das monatliche Nettoarbeitsentgelt bei Monatsbrutto 4.250 €. Abzüge: Lohnsteuer 599,25 €, Kirchensteuer 53,93 €, Soli 0 €, KV 310,25 €, KV-Zusatz 61,63 €, PV 72,25 €, PV-Kinderlosenzuschlag 25,50 €, PV-Zusatz 2025 8,50 €, ALV 55,25 €, RV 395,25 €.", "answer": 2668.19, "tolerance": 0.02, "steps": ["Gesamtabzüge = 599,25 + 53,93 + 0 + 310,25 + 61,63 + 72,25 + 25,50 + 8,50 + 55,25 + 395,25 = 1.581,81", "Netto = 4.250,00 − 1.581,81 = 2.668,19"], "explanation": "Das monatliche Nettoarbeitsentgelt beträgt 2.668,19 €.", "hint": "Alle Abzüge addieren und vom Brutto abziehen."}, {"id": "t9_032", "topic": "9. Verbuchung von Löhnen und Gehältern", "type": "single", "difficulty": "leicht", "prompt": "Warum fällt in der Beispielrechnung kein Solidaritätszuschlag an?", "options": ["Weil das Monatsgehalt unter 1.000 € liegt.", "Weil das Jahresgehalt unter 85.000 € liegt.", "Weil Kirchensteuer gezahlt wird.", "Weil Sozialversicherung gezahlt wird."], "answer": 1, "explanation": "In der Aufgabenstellung steht: Da das Gehalt unter 85.000 € liegt, fällt kein weiterer Solidaritätszuschlag an.", "hint": "Die Grenze steht direkt im Hinweis der Aufgabe."}, {"id": "t9_033", "topic": "9. Verbuchung von Löhnen und Gehältern", "type": "single", "difficulty": "mittel", "prompt": "Der Kinderlosenzuschlag zur Pflegeversicherung wird ...", "options": ["hälftig von Arbeitnehmer und Arbeitgeber getragen", "nur vom Arbeitgeber getragen", "nicht hälftig durch den Arbeitgeber gezahlt, sondern vom Arbeitnehmer getragen", "gar nicht gebucht"], "answer": 2, "explanation": "Der Kinderlosenzuschlag wird nicht hälftig durch den Arbeitgeber getragen.", "hint": "Kinderlosenzuschlag ist eine Arbeitnehmerbelastung."}];
+let state = {
+  pool:[], index:0, current:null, answers:[], score:0, right:0, wrong:0, skipped:[],
+  wrongQs:[], checked:false
+};
+let stats = JSON.parse(localStorage.getItem("bf_stats_v1")||"{}");
+let favorites = JSON.parse(localStorage.getItem("bf_favs_v1")||"[]");
+let wrongBank = JSON.parse(localStorage.getItem("bf_wrongbank_v1")||"[]");
+let skippedBank = JSON.parse(localStorage.getItem("bf_skippedbank_v1")||"[]");
+
+function saveStats(){ localStorage.setItem("bf_stats_v1", JSON.stringify(stats)); }
+function saveFavs(){ localStorage.setItem("bf_favs_v1", JSON.stringify(favorites)); }
+function saveWrongBank(){ localStorage.setItem("bf_wrongbank_v1", JSON.stringify(wrongBank)); updateWrongBankCount(); updateDashboard();}
+function saveSkippedBank(){ localStorage.setItem("bf_skippedbank_v1", JSON.stringify(skippedBank)); updateDashboard(); }
+function updateDashboard(){
+ const dw=document.getElementById("dashWrong");
+ const ds=document.getElementById("dashSkip");
+ const df=document.getElementById("dashFav");
+ if(dw) dw.textContent=wrongBank.length;
+ if(ds) ds.textContent=skippedBank.length;
+ if(df) df.textContent=favorites.length;
+ const tp=document.getElementById("themeProgress");
+ if(tp){
+   const topics=[...new Set(QUESTIONS.map(q=>q.topic))];
+   tp.innerHTML=topics.map(t=>{
+      const qs=QUESTIONS.filter(q=>q.topic===t);
+      let good=0;
+      qs.forEach(q=>{const s=stats[q.id]||{right:0,wrong:0}; if((s.right||0)>(s.wrong||0)) good++;});
+      const pct=Math.round(good/qs.length*100);
+      const color=pct>=80?'🟢':pct>=50?'🟡':'🔴';
+      return `<div>${color} ${t}: ${pct}%</div>`;
+   }).join('');
+ }
+}
+function updateWrongBankCount(){
+  const el = document.getElementById("wrongBankCount");
+  if(el) el.textContent = wrongBank.length ? `(${wrongBank.length})` : "";
+}
+function shuffle(a){ return [...a].sort(()=>Math.random()-0.5); }
+function byId(id){return document.getElementById(id)}
+
+function init(){
+  const topics=[...new Set(QUESTIONS.map(q=>q.topic))];
+  const sel=byId("topic");
+  topics.forEach(t=>{let o=document.createElement("option");o.value=t;o.textContent=t;sel.appendChild(o);});
+  updateWrongBankCount(); updateDashboard();
+}
+init();
+
+function startQuiz(customPool=null){
+  const mode=byId("mode").value;
+  if(mode==="cheat") return showCheat();
+  let topic=byId("topic").value;
+  let pool=customPool ? [...customPool] : QUESTIONS.filter(q=>topic==="all"||q.topic===topic);
+  if(mode==="favorites") pool=pool.filter(q=>favorites.includes(q.id));
+  if(mode==="weak"){
+    pool=pool.flatMap(q=> {
+      const s=stats[q.id]||{wrong:0,right:0};
+      const weight=Math.min(4,1+(s.wrong||0));
+      return Array(weight).fill(q);
+    });
+  }
+  if(pool.length===0){alert("Keine Fragen in diesem Modus. Markiere erst Favoriten oder mache Fehler für den Schwächenmodus."); return;}
+  pool=shuffle(pool);
+  const count=parseInt(byId("count").value);
+  if(count!==999) pool=pool.slice(0,Math.min(count,pool.length));
+  state={pool,index:0,current:null,answers:[],score:0,right:0,wrong:0,skipped:[],wrongQs:[],checked:false};
+  byId("setup").classList.add("hidden"); byId("result").classList.add("hidden"); byId("cheatCard").classList.add("hidden"); byId("quiz").classList.remove("hidden");
+  renderQuestion();
+}
+
+function renderQuestion(){
+  state.checked=false;
+  const q=state.pool[state.index]; state.current=q;
+  byId("feedback").style.display="none"; byId("hintBox").style.display="none"; byId("solutionBox").style.display="none"; byId("correctionCard").style.display="none";
+  byId("qTopic").textContent=q.topic; byId("qType").textContent=typeName(q.type); byId("qDiff").textContent=q.difficulty||"";
+  byId("qNum").textContent=`Frage ${state.index+1} / ${state.pool.length}`;
+  updateNavMiniStats();
+  byId("progress").style.width=((state.index)/state.pool.length*100)+"%";
+  byId("question").textContent=q.prompt;
+  byId("favBtn").textContent=favorites.includes(q.id)?"★":"☆";
+  byId("checkBtn").disabled=false;
+  byId("prevBtn").disabled = state.index === 0;
+  byId("nextBtn").disabled = false;
+  byId("answerArea").innerHTML="";
+  if(q.type==="single"||q.type==="multi") renderOptions(q);
+  if(q.type==="tf") renderTF(q);
+  if(q.type==="calc") renderCalc(q);
+  if(q.type==="fill") renderFill(q);
+  if(q.type==="match") renderMatch(q);
+  if(q.type==="order") renderOrder(q);
+}
+
+function typeName(t){
+  return {single:"Multiple Choice",multi:"Mehrfachauswahl",tf:"Richtig/Falsch",calc:"Rechenaufgabe",fill:"Lückentext",match:"Zuordnung",order:"Reihenfolge"}[t]||t;
+}
+
+function renderOptions(q){
+  q.options.forEach((opt,i)=>{
+    const div=document.createElement("label"); div.className="option";
+    div.innerHTML=`<input name="opt" type="${q.type==="single"?"radio":"checkbox"}" value="${i}"><span>${opt}</span>`;
+    byId("answerArea").appendChild(div);
+  });
+}
+function renderTF(q){
+  const table=document.createElement("table"); table.className="table";
+  table.innerHTML="<tr><th>Aussage</th><th>Richtig</th><th>Falsch</th></tr>";
+  q.statements.forEach((s,i)=>{
+    table.innerHTML += `<tr><td>${s[0]}</td><td><input type="radio" name="tf${i}" value="true"></td><td><input type="radio" name="tf${i}" value="false"></td></tr>`;
+  });
+  byId("answerArea").appendChild(table);
+}
+function renderCalc(q){
+  byId("answerArea").innerHTML=`<input type="number" step="any" id="calcAns" placeholder="Deine Antwort, z. B. 35000">`;
+}
+function renderFill(q){
+  byId("answerArea").innerHTML=`<input type="text" id="fillAns" placeholder="Deine Antwort">`;
+}
+function renderMatch(q){
+  const rights=shuffle(q.pairs.map(p=>p[1]));
+  q.pairs.forEach((p,i)=>{
+    const row=document.createElement("div"); row.className="matchRow";
+    row.innerHTML=`<div class="matchLeft">${p[0]}</div><select id="match${i}"><option value="">Bitte wählen</option>${rights.map(r=>`<option value="${r}">${r}</option>`).join("")}</select>`;
+    byId("answerArea").appendChild(row);
+  });
+}
+function renderOrder(q){
+  let items=shuffle(q.items);
+  const wrap=document.createElement("div"); wrap.id="orderWrap";
+  function redraw(){
+    wrap.innerHTML="";
+    items.forEach((it,i)=>{
+      const d=document.createElement("div"); d.className="orderItem";
+      d.innerHTML=`<button class="secondary" ${i===0?"disabled":""}>↑</button><button class="secondary" ${i===items.length-1?"disabled":""}>↓</button><span>${it}</span>`;
+      d.children[0].onclick=()=>{[items[i-1],items[i]]=[items[i],items[i-1]];redraw();};
+      d.children[1].onclick=()=>{[items[i+1],items[i]]=[items[i],items[i+1]];redraw();};
+      wrap.appendChild(d);
+    });
+  }
+  redraw(); byId("answerArea").appendChild(wrap);
+}
+
+function getUserAnswer(){
+  const q=state.current;
+  if(q.type==="single"){ const c=document.querySelector("input[name=opt]:checked"); return c?parseInt(c.value):null; }
+  if(q.type==="multi"){ return [...document.querySelectorAll("input[name=opt]:checked")].map(x=>parseInt(x.value)).sort((a,b)=>a-b); }
+  if(q.type==="tf"){ return q.statements.map((_,i)=>{const c=document.querySelector(`input[name=tf${i}]:checked`); return c?c.value==="true":null;}); }
+  if(q.type==="calc") return parseFloat((byId("calcAns").value||"").replace(",","."));
+  if(q.type==="fill") return (byId("fillAns").value||"").trim();
+  if(q.type==="match") return q.pairs.map((_,i)=>byId("match"+i).value);
+  if(q.type==="order") return [...document.querySelectorAll("#orderWrap .orderItem span")].map(s=>s.textContent);
+}
+
+function normalize(s){ return String(s).toLowerCase().replaceAll("ä","ae").replaceAll("ö","oe").replaceAll("ü","ue").replaceAll("ß","ss").replace(/\s+/g," ").trim(); }
+function isCorrect(q,ans){
+  if(q.type==="single") return ans===q.answer;
+  if(q.type==="multi") return JSON.stringify(ans)===JSON.stringify([...q.answer].sort((a,b)=>a-b));
+  if(q.type==="tf") return ans.every((v,i)=>v===q.statements[i][1]);
+  if(q.type==="calc") return !Number.isNaN(ans) && Math.abs(ans-q.answer) <= (q.tolerance??0.01);
+  if(q.type==="fill") return q.answers.some(a=>normalize(a)===normalize(ans));
+  if(q.type==="match") return ans.every((v,i)=>v===q.pairs[i][1]);
+  if(q.type==="order") return JSON.stringify(ans)===JSON.stringify(q.answer);
+  return false;
+}
+
+function checkAnswer(){
+  if(state.checked) return;
+  const q=state.current, ans=getUserAnswer();
+  const ok=isCorrect(q,ans);
+  state.checked=true; byId("checkBtn").disabled=true;
+  stats[q.id]=stats[q.id]||{right:0,wrong:0};
+  if(ok){
+    state.score++;state.right++;stats[q.id].right++;
+    // Wenn eine falsch gespeicherte Frage jetzt richtig beantwortet wird,
+    // verschwindet sie automatisch aus dem Extra-Button.
+    wrongBank = wrongBank.filter(id => id !== q.id);
+    skippedBank = skippedBank.filter(id => id !== q.id);
+    saveSkippedBank();
+    saveWrongBank();
+  }
+  else{
+    state.wrong++;state.wrongQs.push({q,ans});stats[q.id].wrong++;
+    // Falsch beantwortete Fragen dauerhaft in die Wiederholungsliste aufnehmen.
+    if(!wrongBank.includes(q.id)) wrongBank.push(q.id);
+    saveWrongBank();
+  }
+  saveStats();
+  updateNavMiniStats();
+  showFeedback(ok);
+}
+
+function showFeedback(ok){
+  const q=state.current, fb=byId("feedback");
+  fb.className="feedback "+(ok?"goodf":"badf");
+  fb.style.display="block";
+  let stepHtml=q.steps?`<h4>Rechenweg</h4><ol>${q.steps.map(s=>`<li>${s}</li>`).join("")}</ol>`:"";
+  fb.innerHTML=`<div class="compactFeedback"><b>${ok?"✅ Richtig!":"❌ Nicht ganz."}</b><span class="small">${ok?"Gut gemacht.":"Korrekturversuch unten oder Erklärung öffnen."}</span></div>
+    <details class="explainBox">
+      <summary>${ok?"Erklärung anzeigen":"Warum ist das falsch?"}</summary>
+      <div><p>${q.explanation}</p>${stepHtml}</div>
+    </details>`;
+  if(!ok){
+    renderCorrection(q);
+  } else {
+    byId("correctionCard").style.display="none";
+  }
+}
+
+
+function renderCorrection(q){
+  const card = byId("correctionCard");
+  card.style.display = "block";
+  card.className = "feedback infof";
+  card.innerHTML = `<h3>🔁 Korrekturversuch</h3>
+    <p class="small">Beantworte dieselbe Frage nochmal. Wenn sie richtig ist, verschwindet sie aus „Falsche Fragen üben“.</p>
+    <div class="questionPanel" style="margin-top:10px">
+      <div class="questionText">${q.prompt}</div>
+      <div id="corrAnswerArea" class="answerPanel"></div>
+    </div>
+    <div class="row" style="margin-top:12px">
+      <button onclick="checkCorrection()">Korrektur prüfen</button>
+      <button class="secondary" onclick="showCorrectionSolution()">Korrektur-Lösung anzeigen</button>
+    </div>
+    <div id="corrFeedback" class="feedback" style="display:none"></div>`;
+  renderCorrectionAnswer(q);
+}
+
+function renderCorrectionAnswer(q){
+  const area = byId("corrAnswerArea");
+  area.innerHTML = "";
+  if(q.type==="single" || q.type==="multi"){
+    q.options.forEach((opt,i)=>{
+      const div=document.createElement("label"); div.className="option";
+      div.innerHTML=`<input name="corrOpt" type="${q.type==="single"?"radio":"checkbox"}" value="${i}"><span>${opt}</span>`;
+      area.appendChild(div);
+    });
+  }
+  if(q.type==="tf"){
+    const table=document.createElement("table"); table.className="table";
+    table.innerHTML="<tr><th>Aussage</th><th>Richtig</th><th>Falsch</th></tr>";
+    q.statements.forEach((s,i)=>{
+      table.innerHTML += `<tr><td>${s[0]}</td><td><input type="radio" name="corrTf${i}" value="true"></td><td><input type="radio" name="corrTf${i}" value="false"></td></tr>`;
+    });
+    area.appendChild(table);
+  }
+  if(q.type==="calc"){
+    area.innerHTML=`<input type="number" step="any" id="corrCalcAns" placeholder="Deine Korrekturantwort">`;
+  }
+  if(q.type==="fill"){
+    area.innerHTML=`<input type="text" id="corrFillAns" placeholder="Deine Korrekturantwort">`;
+  }
+  if(q.type==="match"){
+    const rights=shuffle(q.pairs.map(p=>p[1]));
+    q.pairs.forEach((p,i)=>{
+      const row=document.createElement("div"); row.className="matchRow";
+      row.innerHTML=`<div class="matchLeft">${p[0]}</div><select id="corrMatch${i}"><option value="">Bitte wählen</option>${rights.map(r=>`<option value="${r}">${r}</option>`).join("")}</select>`;
+      area.appendChild(row);
+    });
+  }
+  if(q.type==="order"){
+    let items=shuffle(q.items);
+    const wrap=document.createElement("div"); wrap.id="corrOrderWrap";
+    function redraw(){
+      wrap.innerHTML="";
+      items.forEach((it,i)=>{
+        const d=document.createElement("div"); d.className="orderItem";
+        d.innerHTML=`<button class="secondary" ${i===0?"disabled":""}>↑</button><button class="secondary" ${i===items.length-1?"disabled":""}>↓</button><span>${it}</span>`;
+        d.children[0].onclick=()=>{[items[i-1],items[i]]=[items[i],items[i-1]];redraw();};
+        d.children[1].onclick=()=>{[items[i+1],items[i]]=[items[i],items[i+1]];redraw();};
+        wrap.appendChild(d);
+      });
+    }
+    redraw(); area.appendChild(wrap);
+  }
+}
+
+function getCorrectionAnswer(q){
+  if(q.type==="single"){
+    const c=document.querySelector("input[name=corrOpt]:checked");
+    return c?parseInt(c.value):null;
+  }
+  if(q.type==="multi"){
+    return [...document.querySelectorAll("input[name=corrOpt]:checked")].map(x=>parseInt(x.value)).sort((a,b)=>a-b);
+  }
+  if(q.type==="tf"){
+    return q.statements.map((_,i)=>{
+      const c=document.querySelector(`input[name=corrTf${i}]:checked`);
+      return c?c.value==="true":null;
+    });
+  }
+  if(q.type==="calc") return parseFloat((byId("corrCalcAns").value||"").replace(",","."));
+  if(q.type==="fill") return (byId("corrFillAns").value||"").trim();
+  if(q.type==="match") return q.pairs.map((_,i)=>byId("corrMatch"+i).value);
+  if(q.type==="order") return [...document.querySelectorAll("#corrOrderWrap .orderItem span")].map(s=>s.textContent);
+}
+
+function checkCorrection(){
+  const q = state.current;
+  const ans = getCorrectionAnswer(q);
+  const ok = isCorrect(q, ans);
+  const cf = byId("corrFeedback");
+  cf.style.display = "block";
+  if(ok){
+    cf.className = "feedback goodf";
+    wrongBank = wrongBank.filter(id => id !== q.id);
+    skippedBank = skippedBank.filter(id => id !== q.id);
+    saveWrongBank();
+    saveSkippedBank();
+    cf.innerHTML = `<b>✅ Jetzt richtig!</b><p>${q.explanation}</p><p class="small">Diese Frage wurde aus der Liste „Falsche Fragen üben“ entfernt.</p>`;
+  } else {
+    cf.className = "feedback badf";
+    cf.innerHTML = `<b>❌ Noch nicht richtig.</b><p>Versuch es nochmal. Tipp: ${q.hint || "Schau dir die Regel nochmal genau an."}</p>`;
+  }
+}
+
+function showCorrectionSolution(){
+  const q = state.current;
+  const cf = byId("corrFeedback");
+  cf.style.display = "block";
+  cf.className = "feedback infof";
+  cf.innerHTML = `<b>✅ Richtige Lösung:</b><br>${solutionText(q)}<p>${q.explanation}</p>`;
+}
+
+function showHint(){
+  const box=byId("hintBox"); box.style.display="block"; box.innerHTML="<b>💡 Tipp:</b> "+(state.current.hint||"Überlege, welche Konten betroffen sind.");
+}
+function toggleSolution(){
+  const box=byId("solutionBox");
+  box.style.display=box.style.display==="block"?"none":"block";
+  box.innerHTML="<b>✅ Lösung:</b><br>"+solutionText(state.current);
+}
+function solutionText(q){
+  if(q.type==="single") return q.options[q.answer];
+  if(q.type==="multi") return q.answer.map(i=>q.options[i]).join("<br>");
+  if(q.type==="tf") return q.statements.map(s=>`${s[0]} → ${s[1]?"Richtig":"Falsch"}`).join("<br>");
+  if(q.type==="calc") return String(q.answer);
+  if(q.type==="fill") return q.answers[0];
+  if(q.type==="match") return q.pairs.map(p=>`${p[0]} → ${p[1]}`).join("<br>");
+  if(q.type==="order") return q.answer.map((x,i)=>`${i+1}. ${x}`).join("<br>");
+}
+function skipQuestion(){
+  state.skipped.push(state.current);
+  if(!skippedBank.includes(state.current.id)) skippedBank.push(state.current.id);
+  saveSkippedBank();
+  updateNavMiniStats();
+  nextQuestion();
+}
+
+function updateNavMiniStats(){
+  const el = byId("navMiniStats");
+  if(!el) return;
+  el.textContent = `Frage ${state.index+1} / ${state.pool.length} · ❌ Fehler: ${state.wrong} · ⭐ Favoriten: ${favorites.length} · 🔴 Offen: ${wrongBank.length}`;
+}
+
+
+function prevQuestion(){
+  if(state.index > 0){
+    state.index--;
+    renderQuestion();
+  }
+}
+function nextQuestion(){
+  if(state.index < state.pool.length-1){state.index++;renderQuestion();}
+  else finishQuiz();
+}
+function finishQuiz(){
+  byId("quiz").classList.add("hidden"); byId("result").classList.remove("hidden");
+  byId("progress").style.width="100%";
+  const total=state.right+state.wrong;
+  const pct=state.pool.length?Math.round((state.score/state.pool.length)*100):0;
+  byId("scoreVal").textContent=`${state.score}/${state.pool.length}`;
+  byId("percentVal").textContent=pct+"%";
+  byId("rightVal").textContent=state.right; byId("wrongVal").textContent=state.wrong; byId("skipVal").textContent=state.skipped.length;
+  const m=byId("mistakes");
+  if(state.wrongQs.length===0 && state.skipped.length===0){m.innerHTML="<p>Stark! Keine Fehler oder übersprungenen Fragen.</p>"; return;}
+  m.innerHTML="";
+  state.wrongQs.forEach((w,i)=>{
+    const div=document.createElement("div"); div.className="card";
+    div.innerHTML=`<b>Fehler ${i+1}:</b><p>${w.q.prompt}</p><p><b>Richtige Lösung:</b><br>${solutionText(w.q)}</p><p>${w.q.explanation}</p>`;
+    m.appendChild(div);
+  });
+  state.skipped.forEach((q,i)=>{
+    const div=document.createElement("div"); div.className="card";
+    div.innerHTML=`<b>Übersprungen ${i+1}:</b><p>${q.prompt}</p><p><b>Lösung:</b><br>${solutionText(q)}</p>`;
+    m.appendChild(div);
+  });
+}
+function repeatWrong(){ if(state.wrongQs.length) startQuiz(state.wrongQs.map(x=>x.q)); else alert("Keine falschen Fragen vorhanden."); }
+function repeatSkipped(){ if(state.skipped.length) startQuiz(state.skipped); else alert("Keine übersprungenen Fragen vorhanden."); }
+function toggleFav(){
+  const id=state.current.id;
+  if(favorites.includes(id)) favorites=favorites.filter(x=>x!==id); else favorites.push(id);
+  saveFavs(); byId("favBtn").textContent=favorites.includes(id)?"★":"☆"; updateNavMiniStats();
+}
+function startFavorites(){
+ const pool=favorites.map(id=>QUESTIONS.find(q=>q.id===id)).filter(Boolean);
+ if(pool.length===0){alert("Keine Favoriten vorhanden."); return;}
+ startQuiz(pool);
+}
+function startSkippedBank(){
+ const pool=skippedBank.map(id=>QUESTIONS.find(q=>q.id===id)).filter(Boolean);
+ if(pool.length===0){alert("Keine übersprungenen Fragen vorhanden."); return;}
+ startQuiz(pool);
+}
+function startWrongBank(){
+  const pool = wrongBank.map(id => QUESTIONS.find(q => q.id === id)).filter(Boolean);
+  if(pool.length === 0){
+    alert("Aktuell sind keine falsch beantworteten Fragen gespeichert. Sobald du eine Frage falsch beantwortest, erscheint sie hier.");
+    return;
+  }
+  startQuiz(pool);
+}
+function showCheat(){byId("setup").classList.add("hidden");byId("quiz").classList.add("hidden");byId("result").classList.add("hidden");byId("cheatCard").classList.remove("hidden");}
+
+
+function backHome(){byId("setup").classList.remove("hidden");byId("quiz").classList.add("hidden");byId("stickyNav").style.display="none";byId("result").classList.add("hidden");byId("cheatCard").classList.add("hidden");}
+
+function resetAll(){ if(confirm("Statistik und Favoriten wirklich löschen?")){localStorage.removeItem("bf_stats_v1");localStorage.removeItem("bf_favs_v1");localStorage.removeItem("bf_wrongbank_v1");localStorage.removeItem("bf_skippedbank_v1");stats={};favorites=[];wrongBank=[];updateWrongBankCount(); updateDashboard();alert("Gelöscht.");} }
+</script>
+
+
+
+</body>
+</html>
